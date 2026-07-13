@@ -7,6 +7,7 @@ export type OtherType = 'anime' | 'manga' | 'documentary' | 'star' | 'other'
 export type TVGroupMode = 'country' | 'genre' | 'platform'
 
 export interface Movie {
+  id?: string
   title: string
   genre: string
   synopsis?: string
@@ -16,6 +17,7 @@ export interface Movie {
 }
 
 export interface TVShow {
+  id?: string
   title: string
   country?: string
   genre?: string
@@ -32,6 +34,7 @@ export interface SectionContent {
 }
 
 export interface OtherItem {
+  id?: string
   title: string
   type: OtherType
   actor?: string

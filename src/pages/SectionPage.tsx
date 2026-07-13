@@ -1,14 +1,25 @@
 import { useMemo, useState } from 'react'
+import { Link } from 'react-router-dom'
 import GroupToggle from '../components/GroupToggle'
 import GroupedAccordion from '../components/GroupedAccordion'
-import SimpleTitleList from '../components/SimpleTitleList'
+import ItemActionSheet, { type ItemAction } from '../components/ItemActionSheet'
+import ProgressEditor from '../components/ProgressEditor'
+import SimpleTitleList, { type SimpleListItem } from '../components/SimpleTitleList'
 import SubTabBar from '../components/SubTabBar'
-import { getSection } from '../data/loadWatchlist'
+import { getSectionEntries, useWatchlist } from '../context/WatchlistContext'
+import type { MediaKind } from '../store/watchlistStore'
 import type { Movie, SectionKey, TVGroupMode, TVShow } from '../types'
 import { getMovieGroups, getTVGroups, SECTIONS, SIMPLE_SECTIONS } from '../types'
 
 type SectionPageProps = {
   sectionKey: SectionKey
+}
+
+type ActiveItem = {
+  id: string
+  kind: MediaKind
+  title: string
+  progress?: string
 }
 
 function movieDetails(movie: Movie) {
@@ -37,17 +48,24 @@ function tvDetails(show: TVShow) {
 }
 
 export default function SectionPage({ sectionKey }: SectionPageProps) {
-  const section = getSection(sectionKey)
+  const { data, setProgress, moveTo, remove } = useWatchlist()
+  const section = data.sections[sectionKey]
   const label = SECTIONS.find((s) => s.key === sectionKey)?.label ?? ''
   const isSimple = SIMPLE_SECTIONS.includes(sectionKey)
 
-  const simpleItems = useMemo(
+  const [activeItem, setActiveItem] = useState<ActiveItem | null>(null)
+  const [sheetOpen, setSheetOpen] = useState(false)
+  const [editorOpen, setEditorOpen] = useState(false)
+
+  const simpleItems: SimpleListItem[] = useMemo(
     () =>
-      [...section.tvShows, ...section.movies].map((item) => ({
-        title: item.title,
-        progress: 'progress' in item ? item.progress : undefined,
+      getSectionEntries(data, sectionKey).map((entry) => ({
+        id: entry.id,
+        kind: entry.kind,
+        title: entry.title,
+        progress: entry.progress,
       })),
-    [section.movies, section.tvShows],
+    [data, sectionKey],
   )
 
   const [subTab, setSubTab] = useState<'movies' | 'tv'>('movies')
@@ -59,53 +77,118 @@ export default function SectionPage({ sectionKey }: SectionPageProps) {
     [section.tvShows, tvGroupMode],
   )
 
-  if (isSimple) {
-    return (
-      <div>
-        <header className="mb-4">
-          <h1 className="text-xl font-bold">{label}</h1>
-          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">共 {simpleItems.length} 项</p>
-        </header>
+  const openActions = (item: ActiveItem) => {
+    setActiveItem(item)
+    setSheetOpen(true)
+  }
 
-        <SimpleTitleList items={simpleItems} emptyText="暂无内容" />
-      </div>
-    )
+  const handleAction = (action: ItemAction) => {
+    if (!activeItem) return
+
+    switch (action) {
+      case 'editProgress':
+        setEditorOpen(true)
+        break
+      case 'moveWatching':
+        moveTo(sectionKey, 'watching', activeItem.id, activeItem.kind, activeItem.progress ?? 'S1E1')
+        break
+      case 'moveUrgent':
+        moveTo(sectionKey, 'urgent', activeItem.id, activeItem.kind)
+        break
+      case 'delete':
+        if (confirm(`确定删除「${activeItem.title}」？`)) {
+          remove(sectionKey, activeItem.id, activeItem.kind)
+        }
+        break
+    }
+  }
+
+  const handleTodoAction = (item: Movie | TVShow, kind: MediaKind) => {
+    openActions({
+      id: item.id!,
+      kind,
+      title: item.title,
+      progress: kind === 'tv' ? (item as TVShow).progress : undefined,
+    })
   }
 
   return (
     <div>
-      <header className="mb-4">
-        <h1 className="text-xl font-bold">{label}</h1>
-        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-          电影 {section.movies.length} 部 · 电视剧 {section.tvShows.length} 部
-        </p>
+      <header className="mb-4 flex items-start justify-between gap-3">
+        <div>
+          <h1 className="text-xl font-bold">{label}</h1>
+          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+            {isSimple
+              ? `共 ${simpleItems.length} 项 · 点 ··· 管理`
+              : `电影 ${section.movies.length} 部 · 电视剧 ${section.tvShows.length} 部 · 点 ··· 管理`}
+          </p>
+        </div>
+        <Link
+          to="/settings"
+          className="min-h-11 shrink-0 rounded-xl px-3 text-sm text-slate-500 dark:text-slate-400"
+        >
+          数据
+        </Link>
       </header>
 
-      <SubTabBar
-        active={subTab}
-        onChange={setSubTab}
-        movieCount={section.movies.length}
-        tvCount={section.tvShows.length}
-      />
-
-      {subTab === 'movies' ? (
-        <GroupedAccordion
-          groups={movieGroups}
-          getDetails={movieDetails}
-          emptyText="暂无电影"
-          defaultCollapsed
+      {isSimple ? (
+        <SimpleTitleList
+          items={simpleItems}
+          emptyText="暂无内容"
+          onItemAction={(item) => openActions(item)}
         />
       ) : (
         <>
-          <GroupToggle active={tvGroupMode} onChange={setTvGroupMode} />
-          <GroupedAccordion
-            groups={tvGroups}
-            getDetails={tvDetails}
-            emptyText="暂无电视剧"
-            defaultCollapsed
+          <SubTabBar
+            active={subTab}
+            onChange={setSubTab}
+            movieCount={section.movies.length}
+            tvCount={section.tvShows.length}
           />
+
+          {subTab === 'movies' ? (
+            <GroupedAccordion
+              groups={movieGroups}
+              getDetails={movieDetails}
+              emptyText="暂无电影"
+              defaultCollapsed
+              getItemId={(item) => item.id ?? item.title}
+              onItemAction={(item) => handleTodoAction(item, 'movie')}
+            />
+          ) : (
+            <>
+              <GroupToggle active={tvGroupMode} onChange={setTvGroupMode} />
+              <GroupedAccordion
+                groups={tvGroups}
+                getDetails={tvDetails}
+                emptyText="暂无电视剧"
+                defaultCollapsed
+                getItemId={(item) => item.id ?? item.title}
+                onItemAction={(item) => handleTodoAction(item, 'tv')}
+              />
+            </>
+          )}
         </>
       )}
+
+      <ItemActionSheet
+        open={sheetOpen}
+        title={activeItem?.title ?? ''}
+        section={sectionKey}
+        onAction={handleAction}
+        onClose={() => setSheetOpen(false)}
+      />
+
+      <ProgressEditor
+        open={editorOpen}
+        title={activeItem?.title ?? ''}
+        progress={activeItem?.progress}
+        onSave={(progress) => {
+          if (!activeItem) return
+          setProgress(sectionKey, activeItem.id, activeItem.kind, progress)
+        }}
+        onClose={() => setEditorOpen(false)}
+      />
     </div>
   )
 }

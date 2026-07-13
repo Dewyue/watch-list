@@ -6,18 +6,22 @@ type Detail = {
   value: string
 }[]
 
-type GroupedAccordionProps<T extends { title: string }> = {
+type GroupedAccordionProps<T extends { title: string; id?: string }> = {
   groups: Map<string, T[]>
   getDetails: (item: T) => Detail
   emptyText: string
   defaultCollapsed?: boolean
+  getItemId?: (item: T, groupName: string, index: number) => string
+  onItemAction?: (item: T) => void
 }
 
-export default function GroupedAccordion<T extends { title: string }>({
+export default function GroupedAccordion<T extends { title: string; id?: string }>({
   groups,
   getDetails,
   emptyText,
   defaultCollapsed = false,
+  getItemId,
+  onItemAction,
 }: GroupedAccordionProps<T>) {
   const [openGroups, setOpenGroups] = useState<Set<string>>(
     () => (defaultCollapsed ? new Set() : new Set(groups.keys())),
@@ -76,7 +80,7 @@ export default function GroupedAccordion<T extends { title: string }>({
             {isOpen && (
               <div className="border-t border-slate-100 dark:border-slate-800">
                 {items.map((item, index) => {
-                  const itemId = `${groupName}-${item.title}-${index}`
+                  const itemId = getItemId?.(item, groupName, index) ?? `${groupName}-${item.title}-${index}`
                   return (
                     <MediaCard
                       key={itemId}
@@ -84,6 +88,7 @@ export default function GroupedAccordion<T extends { title: string }>({
                       details={getDetails(item)}
                       isOpen={openItems.has(itemId)}
                       onToggle={() => toggleItem(itemId)}
+                      onAction={onItemAction ? () => onItemAction(item) : undefined}
                     />
                   )
                 })}
