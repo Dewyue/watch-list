@@ -133,6 +133,34 @@ export function deleteItem(
   return next
 }
 
+export function addMovie(data: WatchlistData, section: SectionKey, movie: Movie): WatchlistData {
+  const next = structuredClone(data)
+  next.sections[section].movies.push({
+    ...movie,
+    id: movie.id ?? createId(),
+  })
+  return next
+}
+
+export function addTVShow(data: WatchlistData, section: SectionKey, show: TVShow): WatchlistData {
+  const next = structuredClone(data)
+  next.sections[section].tvShows.push({
+    ...show,
+    id: show.id ?? createId(),
+    progress: show.progress ?? (section === 'watching' ? 'S1E1' : undefined),
+  })
+  return next
+}
+
+export function addOtherItem(data: WatchlistData, item: OtherItem): WatchlistData {
+  const next = structuredClone(data)
+  next.others.push({
+    ...item,
+    id: item.id ?? createId(),
+  })
+  return next
+}
+
 export function exportWatchlist(data: WatchlistData): string {
   return JSON.stringify(data, null, 2)
 }

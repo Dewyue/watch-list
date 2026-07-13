@@ -1,6 +1,9 @@
 import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from 'react'
 import type { MediaKind, MovieItem, TVShowItem } from '../store/watchlistStore'
 import {
+  addMovie,
+  addOtherItem,
+  addTVShow,
   deleteItem,
   exportWatchlist,
   importWatchlist,
@@ -10,13 +13,16 @@ import {
   saveWatchlistToStorage,
   updateProgress,
 } from '../store/watchlistStore'
-import type { SectionKey, WatchlistData } from '../types'
+import type { Movie, OtherItem, SectionKey, TVShow, WatchlistData } from '../types'
 
 type WatchlistContextValue = {
   data: WatchlistData
   setProgress: (section: SectionKey, id: string, kind: MediaKind, progress: string) => void
   moveTo: (from: SectionKey, to: SectionKey, id: string, kind: MediaKind, progress?: string) => void
   remove: (section: SectionKey, id: string, kind: MediaKind) => void
+  addMovie: (section: SectionKey, movie: Movie) => void
+  addTV: (section: SectionKey, show: TVShow) => void
+  addOther: (item: OtherItem) => void
   reset: () => void
   exportJson: () => string
   importJson: (json: string) => void
@@ -43,6 +49,15 @@ export function WatchlistProvider({ children }: { children: ReactNode }) {
       },
       remove: (section, id, kind) => {
         persist(deleteItem(data, section, id, kind))
+      },
+      addMovie: (section, movie) => {
+        persist(addMovie(data, section, movie))
+      },
+      addTV: (section, show) => {
+        persist(addTVShow(data, section, show))
+      },
+      addOther: (item) => {
+        persist(addOtherItem(data, item))
       },
       reset: () => {
         persist(resetWatchlistStorage())

@@ -1,11 +1,13 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useWatchlist } from '../context/WatchlistContext'
+import { getTmdbApiKey, setTmdbApiKey } from '../lib/tmdb'
 
 export default function SettingsPage() {
   const { exportJson, importJson, reset } = useWatchlist()
   const [json, setJson] = useState('')
   const [message, setMessage] = useState('')
+  const [apiKey, setApiKey] = useState(() => getTmdbApiKey())
 
   const copyExport = async () => {
     const text = exportJson()
@@ -27,6 +29,11 @@ export default function SettingsPage() {
     }
   }
 
+  const saveApiKey = () => {
+    setTmdbApiKey(apiKey)
+    setMessage('TMDB API Key 已保存')
+  }
+
   return (
     <div>
       <header className="mb-4">
@@ -45,11 +52,40 @@ export default function SettingsPage() {
         </p>
       )}
 
+      <section className="mb-6 rounded-2xl border border-slate-200 p-4 dark:border-slate-700">
+        <h2 className="font-semibold">自动补全（TMDB）</h2>
+        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+          添加条目时联网获取简介、演员、分类等。免费注册：
+          <a
+            href="https://www.themoviedb.org/settings/api"
+            target="_blank"
+            rel="noreferrer"
+            className="text-indigo-600 dark:text-indigo-400"
+          >
+            themoviedb.org
+          </a>
+          ，复制 API Key（v3 auth）粘贴到下方。
+        </p>
+        <input
+          value={apiKey}
+          onChange={(e) => setApiKey(e.target.value)}
+          placeholder="TMDB API Key"
+          className="mt-3 min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm dark:border-slate-700 dark:bg-slate-800"
+        />
+        <button
+          type="button"
+          onClick={saveApiKey}
+          className="mt-2 min-h-11 w-full rounded-xl bg-indigo-600 text-sm font-medium text-white"
+        >
+          保存 API Key
+        </button>
+      </section>
+
       <div className="space-y-3">
         <button
           type="button"
           onClick={copyExport}
-          className="min-h-11 w-full rounded-xl bg-indigo-600 text-sm font-medium text-white"
+          className="min-h-11 w-full rounded-xl border border-slate-200 text-sm dark:border-slate-700"
         >
           导出 JSON
         </button>

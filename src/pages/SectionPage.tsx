@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
+import AddItemModal from '../components/AddItemModal'
 import GroupToggle from '../components/GroupToggle'
 import GroupedAccordion from '../components/GroupedAccordion'
 import ItemActionSheet, { type ItemAction } from '../components/ItemActionSheet'
@@ -48,7 +49,7 @@ function tvDetails(show: TVShow) {
 }
 
 export default function SectionPage({ sectionKey }: SectionPageProps) {
-  const { data, setProgress, moveTo, remove } = useWatchlist()
+  const { data, setProgress, moveTo, remove, addMovie, addTV } = useWatchlist()
   const section = data.sections[sectionKey]
   const label = SECTIONS.find((s) => s.key === sectionKey)?.label ?? ''
   const isSimple = SIMPLE_SECTIONS.includes(sectionKey)
@@ -56,6 +57,7 @@ export default function SectionPage({ sectionKey }: SectionPageProps) {
   const [activeItem, setActiveItem] = useState<ActiveItem | null>(null)
   const [sheetOpen, setSheetOpen] = useState(false)
   const [editorOpen, setEditorOpen] = useState(false)
+  const [addOpen, setAddOpen] = useState(false)
 
   const simpleItems: SimpleListItem[] = useMemo(
     () =>
@@ -123,12 +125,21 @@ export default function SectionPage({ sectionKey }: SectionPageProps) {
               : `电影 ${section.movies.length} 部 · 电视剧 ${section.tvShows.length} 部 · 点 ··· 管理`}
           </p>
         </div>
-        <Link
-          to="/settings"
-          className="min-h-11 shrink-0 rounded-xl px-3 text-sm text-slate-500 dark:text-slate-400"
-        >
-          数据
-        </Link>
+        <div className="flex shrink-0 gap-1">
+          <button
+            type="button"
+            onClick={() => setAddOpen(true)}
+            className="min-h-11 rounded-xl bg-indigo-600 px-3 text-sm font-medium text-white"
+          >
+            添加
+          </button>
+          <Link
+            to="/settings"
+            className="min-h-11 rounded-xl px-3 text-sm text-slate-500 dark:text-slate-400"
+          >
+            数据
+          </Link>
+        </div>
       </header>
 
       {isSimple ? (
@@ -188,6 +199,19 @@ export default function SectionPage({ sectionKey }: SectionPageProps) {
           setProgress(sectionKey, activeItem.id, activeItem.kind, progress)
         }}
         onClose={() => setEditorOpen(false)}
+      />
+
+      <AddItemModal
+        open={addOpen}
+        target={{
+          type: 'section',
+          section: sectionKey,
+          defaultKind: isSimple ? 'tv' : subTab === 'movies' ? 'movie' : 'tv',
+        }}
+        onClose={() => setAddOpen(false)}
+        onAddMovie={addMovie}
+        onAddTV={addTV}
+        onAddOther={() => {}}
       />
     </div>
   )

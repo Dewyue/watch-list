@@ -1,5 +1,6 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
+import AddItemModal from '../components/AddItemModal'
 import GroupedAccordion from '../components/GroupedAccordion'
 import { useWatchlist } from '../context/WatchlistContext'
 import type { OtherItem } from '../types'
@@ -13,9 +14,10 @@ function otherDetails(item: OtherItem) {
 }
 
 export default function OthersPage() {
-  const { data } = useWatchlist()
+  const { data, addOther } = useWatchlist()
   const items = data.others
   const groups = useMemo(() => getOtherGroups(items), [items])
+  const [addOpen, setAddOpen] = useState(false)
 
   return (
     <div>
@@ -26,12 +28,21 @@ export default function OthersPage() {
             动漫、漫画、纪录片、演员作品等 · 共 {items.length} 项
           </p>
         </div>
-        <Link
-          to="/settings"
-          className="min-h-11 shrink-0 rounded-xl px-3 text-sm text-slate-500 dark:text-slate-400"
-        >
-          数据
-        </Link>
+        <div className="flex shrink-0 gap-1">
+          <button
+            type="button"
+            onClick={() => setAddOpen(true)}
+            className="min-h-11 rounded-xl bg-indigo-600 px-3 text-sm font-medium text-white"
+          >
+            添加
+          </button>
+          <Link
+            to="/settings"
+            className="min-h-11 rounded-xl px-3 text-sm text-slate-500 dark:text-slate-400"
+          >
+            数据
+          </Link>
+        </div>
       </header>
 
       <GroupedAccordion
@@ -40,6 +51,15 @@ export default function OthersPage() {
         emptyText="暂无内容"
         defaultCollapsed
         getItemId={(item) => item.id ?? item.title}
+      />
+
+      <AddItemModal
+        open={addOpen}
+        target={{ type: 'others' }}
+        onClose={() => setAddOpen(false)}
+        onAddMovie={() => {}}
+        onAddTV={() => {}}
+        onAddOther={addOther}
       />
     </div>
   )
