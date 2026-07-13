@@ -78,6 +78,7 @@
 | `anime` | 动漫 |
 | `manga` | 漫画 |
 | `documentary` | 纪录片 |
+| `star` | 演员作品（某演员出演的影视合集） |
 | `other` | 其他 |
 
 ```json

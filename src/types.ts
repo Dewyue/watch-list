@@ -1,6 +1,6 @@
 export type SectionKey = 'watching' | 'urgent' | 'unfinished' | 'todo'
 
-export type OtherType = 'anime' | 'manga' | 'documentary' | 'other'
+export type OtherType = 'anime' | 'manga' | 'documentary' | 'star' | 'other'
 
 export type TVGroupMode = 'country' | 'genre' | 'platform'
 
@@ -55,6 +55,7 @@ export const OTHER_TYPE_LABELS: Record<OtherType, string> = {
   anime: '动漫',
   manga: '漫画',
   documentary: '纪录片',
+  star: '演员作品',
   other: '其他',
 }
 

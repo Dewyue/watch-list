@@ -234,7 +234,6 @@
         { "title": "本杰明·巴顿奇事", "genre": "剧情" },
         { "title": "都灵之马", "genre": "剧情", "synopsis": "黑白" },
         { "title": "无问西东", "genre": "剧情" },
-        { "title": "王力宏", "genre": "剧情" },
 
         { "title": "兰戈", "genre": "动画" },
         { "title": "名侦探柯南：独眼的残像", "genre": "动画" },
@@ -519,6 +518,11 @@
     {
       "title": "刀的哲学",
       "type": "documentary"
+    },
+    {
+      "title": "王力宏",
+      "type": "star",
+      "synopsis": "王力宏出演过的电影与影视剧"
     }
   ]
 }

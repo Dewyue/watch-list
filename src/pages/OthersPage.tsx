@@ -20,7 +20,7 @@ export default function OthersPage() {
       <header className="mb-4">
         <h1 className="text-xl font-bold">其他</h1>
         <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-          动漫、漫画、纪录片等非真人实拍作品 · 共 {items.length} 项
+          动漫、漫画、纪录片、演员作品等 · 共 {items.length} 项
         </p>
       </header>
 
