@@ -31,6 +31,7 @@ export interface SectionContent {
 export interface OtherItem {
   title: string
   type: OtherType
+  actor?: string
   synopsis?: string
   progress?: string
 }
@@ -97,5 +98,8 @@ export function getTVGroups(tvShows: TVShow[], mode: TVGroupMode): Map<string, T
 }
 
 export function getOtherGroups(items: OtherItem[]): Map<string, OtherItem[]> {
-  return groupBy(items, (item) => OTHER_TYPE_LABELS[item.type] ?? OTHER_TYPE_LABELS.other)
+  return groupBy(items, (item) => {
+    if (item.type === 'star' && item.actor) return item.actor
+    return OTHER_TYPE_LABELS[item.type] ?? OTHER_TYPE_LABELS.other
+  })
 }

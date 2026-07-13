@@ -117,7 +117,6 @@
         { "title": "小鬼当家", "genre": "喜剧" },
         { "title": "独领风骚", "genre": "喜剧" },
         { "title": "小姐好白", "genre": "喜剧" },
-        { "title": "非常幸运", "genre": "喜剧" },
         { "title": "从二十一世纪安全撤离", "genre": "喜剧" },
 
         { "title": "呼啸山庄", "genre": "爱情" },
@@ -130,7 +129,6 @@
         { "title": "前任系列", "genre": "爱情" },
         { "title": "傲慢与偏见", "genre": "爱情" },
         { "title": "人间中毒", "genre": "爱情", "synopsis": "带点颜色" },
-        { "title": "日正当中的星空", "genre": "爱情" },
 
         { "title": "时间规划局", "genre": "科幻" },
         { "title": "永无止境", "genre": "科幻" },
@@ -177,7 +175,6 @@
         { "title": "致命游戏", "genre": "惊悚" },
         { "title": "致命伴旅", "genre": "惊悚" },
         { "title": "红眼航班", "genre": "惊悚" },
-        { "title": "危情生命线", "genre": "惊悚" },
 
         { "title": "惊变28年", "genre": "恐怖" },
         { "title": "当邪恶潜伏时", "genre": "恐怖" },
@@ -213,7 +210,6 @@
         { "title": "杀戮演绎", "genre": "动作" },
         { "title": "新警察故事", "genre": "动作", "synopsis": "成龙、吴彦祖" },
         { "title": "魔女", "genre": "动作" },
-        { "title": "雷霆战警", "genre": "动作" },
         { "title": "镖人", "genre": "动作" },
 
         { "title": "低俗小说", "genre": "犯罪" },
@@ -233,7 +229,6 @@
         { "title": "Hello！树先生", "genre": "剧情", "synopsis": "王宝强" },
         { "title": "本杰明·巴顿奇事", "genre": "剧情" },
         { "title": "都灵之马", "genre": "剧情", "synopsis": "黑白" },
-        { "title": "无问西东", "genre": "剧情" },
 
         { "title": "兰戈", "genre": "动画" },
         { "title": "名侦探柯南：独眼的残像", "genre": "动画" },
@@ -519,10 +514,10 @@
       "title": "刀的哲学",
       "type": "documentary"
     },
-    {
-      "title": "王力宏",
-      "type": "star",
-      "synopsis": "王力宏出演过的电影与影视剧"
-    }
+    { "title": "日正当中的星空", "type": "star", "actor": "王力宏" },
+    { "title": "非常幸运", "type": "star", "actor": "王力宏" },
+    { "title": "危情生命线", "type": "star", "actor": "王力宏" },
+    { "title": "无问西东", "type": "star", "actor": "王力宏" },
+    { "title": "雷霆战警", "type": "star", "actor": "王力宏" }
   ]
 }
