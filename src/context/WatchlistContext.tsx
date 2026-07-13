@@ -41,62 +41,136 @@ const WatchlistContext = createContext<WatchlistContextValue | null>(null)
 export function WatchlistProvider({ children }: { children: ReactNode }) {
   const [data, setData] = useState<WatchlistData>(() => loadWatchlistFromStorage())
 
-  const persist = useCallback((next: WatchlistData) => {
-    setData(next)
-    saveWatchlistToStorage(next)
+  const apply = useCallback((updater: (prev: WatchlistData) => WatchlistData) => {
+    setData((prev) => {
+      const next = updater(prev)
+      saveWatchlistToStorage(next)
+      return next
+    })
   }, [])
+
+  const setProgress = useCallback(
+    (section: SectionKey, id: string, kind: MediaKind, progress: string) => {
+      apply((prev) => updateProgress(prev, section, id, kind, progress))
+    },
+    [apply],
+  )
+
+  const moveTo = useCallback(
+    (from: SectionKey, to: SectionKey, id: string, kind: MediaKind, progress?: string) => {
+      apply((prev) => moveItem(prev, from, to, id, kind, { progress }))
+    },
+    [apply],
+  )
+
+  const remove = useCallback(
+    (section: SectionKey, id: string, kind: MediaKind) => {
+      apply((prev) => deleteItem(prev, section, id, kind))
+    },
+    [apply],
+  )
+
+  const removeOther = useCallback(
+    (id: string) => {
+      apply((prev) => deleteOtherItem(prev, id))
+    },
+    [apply],
+  )
+
+  const addMovieItem = useCallback(
+    (section: SectionKey, movie: Movie) => {
+      const id = movie.id ?? crypto.randomUUID()
+      apply((prev) => addMovie(prev, section, { ...movie, id }))
+      return id
+    },
+    [apply],
+  )
+
+  const addTVItem = useCallback(
+    (section: SectionKey, show: TVShow) => {
+      const id = show.id ?? crypto.randomUUID()
+      apply((prev) => addTVShow(prev, section, { ...show, id }))
+      return id
+    },
+    [apply],
+  )
+
+  const addOther = useCallback(
+    (item: OtherItem) => {
+      const id = item.id ?? crypto.randomUUID()
+      apply((prev) => addOtherItem(prev, { ...item, id }))
+      return id
+    },
+    [apply],
+  )
+
+  const patchMovieItem = useCallback(
+    (section: SectionKey, id: string, patch: Partial<Movie>) => {
+      apply((prev) => patchMovie(prev, section, id, patch))
+    },
+    [apply],
+  )
+
+  const patchTVItem = useCallback(
+    (section: SectionKey, id: string, patch: Partial<TVShow>) => {
+      apply((prev) => patchTVShow(prev, section, id, patch))
+    },
+    [apply],
+  )
+
+  const patchOther = useCallback(
+    (id: string, patch: Partial<OtherItem>) => {
+      apply((prev) => patchOtherItem(prev, id, patch))
+    },
+    [apply],
+  )
+
+  const reset = useCallback(() => {
+    apply(() => resetWatchlistStorage())
+  }, [apply])
+
+  const exportJson = useCallback(() => exportWatchlist(data), [data])
+
+  const importJson = useCallback(
+    (json: string) => {
+      apply(() => importWatchlist(json))
+    },
+    [apply],
+  )
 
   const value = useMemo<WatchlistContextValue>(
     () => ({
       data,
-      setProgress: (section, id, kind, progress) => {
-        persist(updateProgress(data, section, id, kind, progress))
-      },
-      moveTo: (from, to, id, kind, progress) => {
-        persist(moveItem(data, from, to, id, kind, { progress }))
-      },
-      remove: (section, id, kind) => {
-        persist(deleteItem(data, section, id, kind))
-      },
-      removeOther: (id) => {
-        persist(deleteOtherItem(data, id))
-      },
-      addMovie: (section, movie) => {
-        const id = movie.id ?? crypto.randomUUID()
-        const next = addMovie(data, section, { ...movie, id })
-        persist(next)
-        return id
-      },
-      addTV: (section, show) => {
-        const id = show.id ?? crypto.randomUUID()
-        const next = addTVShow(data, section, { ...show, id })
-        persist(next)
-        return id
-      },
-      addOther: (item) => {
-        const id = item.id ?? crypto.randomUUID()
-        const next = addOtherItem(data, { ...item, id })
-        persist(next)
-        return id
-      },
-      patchMovieItem: (section, id, patch) => {
-        persist(patchMovie(data, section, id, patch))
-      },
-      patchTVItem: (section, id, patch) => {
-        persist(patchTVShow(data, section, id, patch))
-      },
-      patchOther: (id, patch) => {
-        persist(patchOtherItem(data, id, patch))
-      },
-      reset: () => {
-        persist(resetWatchlistStorage())
-      },
-      exportJson: () => exportWatchlist(data),
-      importJson: (json) => {
-        persist(importWatchlist(json))
-      },
+      setProgress,
+      moveTo,
+      remove,
+      removeOther,
+      addMovie: addMovieItem,
+      addTV: addTVItem,
+      addOther,
+      patchMovieItem,
+      patchTVItem,
+      patchOther,
+      reset,
+      exportJson,
+      importJson,
     }),
-    [data, persist],
+    [
+      data,
+      setProgress,
+      moveTo,
+      remove,
+      removeOther,
+      addMovieItem,
+      addTVItem,
+      addOther,
+      patchMovieItem,
+      patchTVItem,
+      patchOther,
+      reset,
+      exportJson,
+      importJson,
+    ],
   )
 
   return <WatchlistContext.Provider value={value}>{children}</WatchlistContext.Provider>

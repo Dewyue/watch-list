@@ -14,7 +14,8 @@ export default function BatchEnrichRunner() {
 
   useEffect(() => {
     if (started.current) return
-    if (!getTmdbApiKey() || !shouldAutoEnrichAll()) return
+    if (!getTmdbApiKey()) return
+    if (!shouldAutoEnrichAll()) return
 
     started.current = true
     void enrichAllWatchlist(
@@ -30,7 +31,9 @@ export default function BatchEnrichRunner() {
 
   if (!progress || (!progress.running && progress.done === 0)) return null
 
+  const succeeded = progress.done - progress.failed.length
   const pct = progress.total ? Math.round((progress.done / progress.total) * 100) : 0
+  const topFailure = progress.failed[0]
 
   return (
     <div className="fixed inset-x-0 bottom-20 z-40 mx-auto max-w-[430px] px-4">
@@ -52,9 +55,15 @@ export default function BatchEnrichRunner() {
         {progress.current && (
           <p className="mt-2 truncate text-xs text-slate-500">正在处理：{progress.current}</p>
         )}
-        {!progress.running && progress.failed.length > 0 && (
-          <p className="mt-2 text-xs text-amber-700 dark:text-amber-300">
-            {progress.failed.length} 条未匹配（多为冷门国内剧/漫画，备注已保留）
+        {!progress.running && (
+          <p className="mt-2 text-xs text-slate-600 dark:text-slate-300">
+            成功 {succeeded} 条
+            {progress.failed.length > 0 ? `，失败 ${progress.failed.length} 条` : ''}
+          </p>
+        )}
+        {!progress.running && topFailure && (
+          <p className="mt-1 text-xs text-amber-700 dark:text-amber-300">
+            示例失败：{topFailure.title}（{topFailure.reason}）
           </p>
         )}
       </div>

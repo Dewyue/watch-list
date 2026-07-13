@@ -65,7 +65,7 @@ export default function SettingsPage() {
       )
       setMessage(
         result.failed.length
-          ? `补全完成：${result.done - result.failed.length} 成功，${result.failed.length} 未匹配`
+          ? `补全完成：${result.done - result.failed.length} 成功，${result.failed.length} 失败${result.failed[0] ? `（如：${result.failed[0].title} - ${result.failed[0].reason}）` : ''}`
           : `全部 ${result.done} 条已补全`,
       )
     } catch (err) {

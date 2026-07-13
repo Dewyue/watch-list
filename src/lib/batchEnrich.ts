@@ -3,7 +3,7 @@ import { otherPatchFromMovie, otherPatchFromTV } from './tmdb'
 import type { MediaKind } from '../store/watchlistStore'
 import type { Movie, OtherItem, OtherType, SectionKey, TVShow, WatchlistData } from '../types'
 
-const ENRICH_VERSION = '2026-07-13-all'
+const ENRICH_VERSION = '2026-07-13-v2'
 const ENRICH_VERSION_KEY = 'watch-list-enrich-version'
 const DELAY_MS = 280
 
@@ -159,6 +159,10 @@ export async function enrichAllWatchlist(
   progress.running = false
   progress.current = ''
   onProgress({ ...progress })
-  markAutoEnrichDone()
+
+  const succeeded = progress.total - progress.failed.length
+  if (succeeded > 0) {
+    markAutoEnrichDone()
+  }
   return progress
 }
