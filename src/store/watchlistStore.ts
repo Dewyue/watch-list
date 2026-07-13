@@ -1,5 +1,6 @@
 import type { Movie, OtherItem, SectionKey, TVShow, WatchlistData } from '../types'
 import { migrateItemNotes } from '../lib/itemDetails'
+import { normalizeWatchlistData, validateWatchlistData } from '../lib/watchlistData'
 import seedData from '../../data/watchlist.json'
 
 const STORAGE_KEY = 'watch-list-data'
@@ -27,7 +28,7 @@ export function seedWatchlist(): WatchlistData {
 }
 
 export function ensureIds(data: WatchlistData): WatchlistData {
-  const next = structuredClone(data)
+  const next = normalizeWatchlistData(data)
 
   for (const key of Object.keys(next.sections) as SectionKey[]) {
     next.sections[key] = {
@@ -48,9 +49,13 @@ export function loadWatchlistFromStorage(): WatchlistData {
       saveWatchlistToStorage(fresh)
       return fresh
     }
-    const parsed = ensureIds(JSON.parse(saved) as WatchlistData)
-    saveWatchlistToStorage(parsed)
-    return parsed
+    const parsed = JSON.parse(saved) as unknown
+    if (!validateWatchlistData(parsed)) {
+      throw new Error('invalid watchlist shape')
+    }
+    const withIds = ensureIds(parsed)
+    saveWatchlistToStorage(withIds)
+    return withIds
   } catch {
     const fresh = seedWatchlist()
     saveWatchlistToStorage(fresh)
@@ -59,7 +64,11 @@ export function loadWatchlistFromStorage(): WatchlistData {
 }
 
 export function saveWatchlistToStorage(data: WatchlistData) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
+  } catch {
+    // QuotaExceededError 等：避免整页崩溃
+  }
 }
 
 export function resetWatchlistStorage(): WatchlistData {
@@ -211,7 +220,10 @@ export function exportWatchlist(data: WatchlistData): string {
 }
 
 export function importWatchlist(json: string): WatchlistData {
-  const parsed = JSON.parse(json) as WatchlistData
+  const parsed = JSON.parse(json) as unknown
+  if (!validateWatchlistData(parsed)) {
+    throw new Error('JSON 结构不正确')
+  }
   const seeded = seedWatchlist()
   seeded.sections = parsed.sections
   seeded.others = withIds(parsed.others ?? []).map((item) => migrateItemNotes(item))

@@ -9,8 +9,7 @@ import {
 import { getTmdbApiKey, setTmdbApiKey } from '../lib/tmdb'
 
 export default function SettingsPage() {
-  const { data, exportJson, importJson, reset, patchMovieItem, patchTVItem, patchOther } =
-    useWatchlist()
+  const { data, exportJson, importJson, reset, replaceData } = useWatchlist()
   const [json, setJson] = useState('')
   const [message, setMessage] = useState('')
   const [apiKey, setApiKey] = useState(() => getTmdbApiKey())
@@ -54,15 +53,7 @@ export default function SettingsPage() {
     setMessage('开始批量补全，请保持页面打开…')
 
     try {
-      const result = await enrichAllWatchlist(
-        data,
-        {
-          patchMovie: patchMovieItem,
-          patchTV: patchTVItem,
-          patchOther: patchOther,
-        },
-        setBatchProgress,
-      )
+      const result = await enrichAllWatchlist(data, replaceData, setBatchProgress)
       setMessage(
         result.failed.length
           ? `补全完成：${result.done - result.failed.length} 成功，${result.failed.length} 失败${result.failed[0] ? `（如：${result.failed[0].title} - ${result.failed[0].reason}）` : ''}`

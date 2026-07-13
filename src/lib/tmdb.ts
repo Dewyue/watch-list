@@ -135,6 +135,17 @@ async function tmdbFetch<T>(path: string, apiKey: string, cacheKey: string): Pro
   }
 }
 
+export function cleanSearchTitle(title: string): string {
+  const cleaned = title
+    .replace(/[（(].*[)）]/g, '')
+    .replace(/第\s*[\d、，]+\s*季/g, '')
+    .replace(/第?\d+季$/u, '')
+    .replace(/\s+season\s*\d+$/i, '')
+    .replace(/\d+$/u, '')
+    .trim()
+  return cleaned || title
+}
+
 export async function searchTmdb(
   query: string,
   kind: 'movie' | 'tv',

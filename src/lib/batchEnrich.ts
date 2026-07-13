@@ -1,11 +1,18 @@
 import { enrichItemFromTmdb, type EnrichDetails } from './enrichItem'
 import { otherPatchFromMovie, otherPatchFromTV } from './tmdb'
+import {
+  patchMovieInData,
+  patchOtherInData,
+  patchTVInData,
+} from './watchlistData'
 import type { MediaKind } from '../store/watchlistStore'
-import type { Movie, OtherItem, OtherType, SectionKey, TVShow, WatchlistData } from '../types'
+import type { Movie, OtherType, SectionKey, TVShow, WatchlistData } from '../types'
 
-const ENRICH_VERSION = '2026-07-13-v2'
+const ENRICH_VERSION = '2026-07-13-v3'
 const ENRICH_VERSION_KEY = 'watch-list-enrich-version'
-const DELAY_MS = 280
+const ENRICH_LOCK_KEY = 'watch-list-enrich-lock'
+const DELAY_MS = 320
+const SAVE_EVERY = 5
 
 export type BatchEnrichJob = {
   section: SectionKey | 'others'
@@ -37,21 +44,11 @@ export function listEnrichJobs(data: WatchlistData): BatchEnrichJob[] {
   for (const section of Object.keys(data.sections) as SectionKey[]) {
     for (const movie of data.sections[section].movies) {
       if (!movie.id) continue
-      jobs.push({
-        section,
-        id: movie.id,
-        title: movie.title,
-        kind: 'movie',
-      })
+      jobs.push({ section, id: movie.id, title: movie.title, kind: 'movie' })
     }
     for (const show of data.sections[section].tvShows) {
       if (!show.id) continue
-      jobs.push({
-        section,
-        id: show.id,
-        title: show.title,
-        kind: 'tv',
-      })
+      jobs.push({ section, id: show.id, title: show.title, kind: 'tv' })
     }
   }
 
@@ -81,33 +78,30 @@ export function resetAutoEnrichFlag() {
   localStorage.removeItem(ENRICH_VERSION_KEY)
 }
 
-type PatchHandlers = {
-  patchMovie: (section: SectionKey, id: string, patch: Partial<Movie>) => void
-  patchTV: (section: SectionKey, id: string, patch: Partial<TVShow>) => void
-  patchOther: (id: string, patch: Partial<OtherItem>) => void
-}
-
-async function enrichJob(job: BatchEnrichJob, handlers: PatchHandlers) {
-  const result = await enrichItemFromTmdb(job.title, job.kind)
-  if ('needPick' in result) {
-    const hit = result.hits[0]
-    if (!hit) throw new Error('未找到匹配结果')
-    const picked = await enrichItemFromTmdb(job.title, hit.kind, hit.id)
-    if ('needPick' in picked) throw new Error('补全失败')
-    applyPatch(job, picked.details, picked.kind, handlers)
-    return
+export function acquireEnrichLock(): boolean {
+  const existing = sessionStorage.getItem(ENRICH_LOCK_KEY)
+  if (existing) {
+    const age = Date.now() - Number(existing)
+    if (Number.isFinite(age) && age < 30 * 60 * 1000) return false
+    sessionStorage.removeItem(ENRICH_LOCK_KEY)
   }
-  applyPatch(job, result.details, result.kind, handlers)
+  sessionStorage.setItem(ENRICH_LOCK_KEY, String(Date.now()))
+  return true
 }
 
-function applyPatch(
+export function releaseEnrichLock() {
+  sessionStorage.removeItem(ENRICH_LOCK_KEY)
+}
+
+function applyPatchInMemory(
+  data: WatchlistData,
   job: BatchEnrichJob,
   details: EnrichDetails,
   kind: MediaKind,
-  handlers: PatchHandlers,
 ) {
   if (job.section === 'others') {
-    handlers.patchOther(
+    patchOtherInData(
+      data,
       job.id,
       kind === 'movie'
         ? otherPatchFromMovie(details as Parameters<typeof otherPatchFromMovie>[0])
@@ -117,17 +111,34 @@ function applyPatch(
   }
 
   if (kind === 'movie') {
-    handlers.patchMovie(job.section, job.id, details as Partial<Movie>)
+    patchMovieInData(data, job.section, job.id, details as Partial<Movie>)
   } else {
-    handlers.patchTV(job.section, job.id, details as Partial<TVShow>)
+    patchTVInData(data, job.section, job.id, details as Partial<TVShow>)
   }
 }
 
+async function enrichJob(job: BatchEnrichJob) {
+  const result = await enrichItemFromTmdb(job.title, job.kind)
+  if ('needPick' in result) {
+    const hit = result.hits[0]
+    if (!hit) throw new Error('未找到匹配结果')
+    const picked = await enrichItemFromTmdb(job.title, hit.kind, hit.id)
+    if ('needPick' in picked) throw new Error('补全失败')
+    return { details: picked.details, kind: picked.kind }
+  }
+  return { details: result.details, kind: result.kind }
+}
+
 export async function enrichAllWatchlist(
-  data: WatchlistData,
-  handlers: PatchHandlers,
+  initialData: WatchlistData,
+  onSave: (data: WatchlistData) => void,
   onProgress: (progress: BatchEnrichProgress) => void,
 ): Promise<BatchEnrichProgress> {
+  if (!acquireEnrichLock()) {
+    throw new Error('已有补全任务在运行，请稍后再试')
+  }
+
+  const data = structuredClone(initialData)
   const jobs = listEnrichJobs(data)
   const progress: BatchEnrichProgress = {
     total: jobs.length,
@@ -138,22 +149,32 @@ export async function enrichAllWatchlist(
   }
   onProgress({ ...progress })
 
-  for (const job of jobs) {
-    progress.current = job.title
-    onProgress({ ...progress })
+  try {
+    for (const job of jobs) {
+      progress.current = job.title
+      onProgress({ ...progress })
 
-    try {
-      await enrichJob(job, handlers)
-    } catch (err) {
-      progress.failed.push({
-        title: job.title,
-        reason: err instanceof Error ? err.message : '补全失败',
-      })
+      try {
+        const { details, kind } = await enrichJob(job)
+        applyPatchInMemory(data, job, details, kind)
+      } catch (err) {
+        progress.failed.push({
+          title: job.title,
+          reason: err instanceof Error ? err.message : '补全失败',
+        })
+      }
+
+      progress.done += 1
+      onProgress({ ...progress })
+
+      if (progress.done % SAVE_EVERY === 0 || progress.done === progress.total) {
+        onSave(structuredClone(data))
+      }
+
+      await delay(DELAY_MS)
     }
-
-    progress.done += 1
-    onProgress({ ...progress })
-    await delay(DELAY_MS)
+  } finally {
+    releaseEnrichLock()
   }
 
   progress.running = false
@@ -164,5 +185,6 @@ export async function enrichAllWatchlist(
   if (succeeded > 0) {
     markAutoEnrichDone()
   }
+
   return progress
 }

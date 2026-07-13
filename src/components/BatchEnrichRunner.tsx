@@ -8,7 +8,7 @@ import {
 import { getTmdbApiKey } from '../lib/tmdb'
 
 export default function BatchEnrichRunner() {
-  const { data, patchMovieItem, patchTVItem, patchOther } = useWatchlist()
+  const { data, replaceData } = useWatchlist()
   const [progress, setProgress] = useState<BatchEnrichProgress | null>(null)
   const started = useRef(false)
 
@@ -18,18 +18,20 @@ export default function BatchEnrichRunner() {
     if (!shouldAutoEnrichAll()) return
 
     started.current = true
-    void enrichAllWatchlist(
-      data,
-      {
-        patchMovie: patchMovieItem,
-        patchTV: patchTVItem,
-        patchOther: patchOther,
-      },
-      setProgress,
-    )
-  }, [data, patchMovieItem, patchTVItem, patchOther])
+    void enrichAllWatchlist(data, replaceData, setProgress).catch((err) => {
+      setProgress({
+        total: 0,
+        done: 0,
+        current: '',
+        failed: [{ title: '批量补全', reason: err instanceof Error ? err.message : '启动失败' }],
+        running: false,
+      })
+    })
+  }, [data, replaceData])
 
-  if (!progress || (!progress.running && progress.done === 0)) return null
+  if (!progress || (!progress.running && progress.done === 0 && progress.failed.length === 0)) {
+    return null
+  }
 
   const succeeded = progress.done - progress.failed.length
   const pct = progress.total ? Math.round((progress.done / progress.total) * 100) : 0
@@ -42,20 +44,24 @@ export default function BatchEnrichRunner() {
           <span className="font-medium text-indigo-700 dark:text-indigo-300">
             {progress.running ? 'TMDB 批量补全中…' : 'TMDB 批量补全完成'}
           </span>
-          <span className="text-slate-500">
-            {progress.done}/{progress.total}
-          </span>
+          {progress.total > 0 && (
+            <span className="text-slate-500">
+              {progress.done}/{progress.total}
+            </span>
+          )}
         </div>
-        <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800">
-          <div
-            className="h-full rounded-full bg-indigo-500 transition-all"
-            style={{ width: `${pct}%` }}
-          />
-        </div>
+        {progress.total > 0 && (
+          <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800">
+            <div
+              className="h-full rounded-full bg-indigo-500 transition-all"
+              style={{ width: `${pct}%` }}
+            />
+          </div>
+        )}
         {progress.current && (
           <p className="mt-2 truncate text-xs text-slate-500">正在处理：{progress.current}</p>
         )}
-        {!progress.running && (
+        {!progress.running && progress.total > 0 && (
           <p className="mt-2 text-xs text-slate-600 dark:text-slate-300">
             成功 {succeeded} 条
             {progress.failed.length > 0 ? `，失败 ${progress.failed.length} 条` : ''}
@@ -63,7 +69,7 @@ export default function BatchEnrichRunner() {
         )}
         {!progress.running && topFailure && (
           <p className="mt-1 text-xs text-amber-700 dark:text-amber-300">
-            示例失败：{topFailure.title}（{topFailure.reason}）
+            {topFailure.title}：{topFailure.reason}
           </p>
         )}
       </div>

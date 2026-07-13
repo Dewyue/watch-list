@@ -31,6 +31,7 @@ type WatchlistContextValue = {
   patchMovieItem: (section: SectionKey, id: string, patch: Partial<Movie>) => void
   patchTVItem: (section: SectionKey, id: string, patch: Partial<TVShow>) => void
   patchOther: (id: string, patch: Partial<OtherItem>) => void
+  replaceData: (data: WatchlistData) => void
   reset: () => void
   exportJson: () => string
   importJson: (json: string) => void
@@ -125,6 +126,11 @@ export function WatchlistProvider({ children }: { children: ReactNode }) {
     [apply],
   )
 
+  const replaceData = useCallback((next: WatchlistData) => {
+    setData(next)
+    saveWatchlistToStorage(next)
+  }, [])
+
   const reset = useCallback(() => {
     apply(() => resetWatchlistStorage())
   }, [apply])
@@ -151,6 +157,7 @@ export function WatchlistProvider({ children }: { children: ReactNode }) {
       patchMovieItem,
       patchTVItem,
       patchOther,
+      replaceData,
       reset,
       exportJson,
       importJson,
@@ -167,6 +174,7 @@ export function WatchlistProvider({ children }: { children: ReactNode }) {
       patchMovieItem,
       patchTVItem,
       patchOther,
+      replaceData,
       reset,
       exportJson,
       importJson,
