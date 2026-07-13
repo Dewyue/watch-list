@@ -41,8 +41,12 @@ export default function SectionPage({ sectionKey }: SectionPageProps) {
   const label = SECTIONS.find((s) => s.key === sectionKey)?.label ?? ''
   const isSimple = SIMPLE_SECTIONS.includes(sectionKey)
 
-  const simpleTitles = useMemo(
-    () => [...section.tvShows, ...section.movies].map((item) => item.title),
+  const simpleItems = useMemo(
+    () =>
+      [...section.tvShows, ...section.movies].map((item) => ({
+        title: item.title,
+        progress: 'progress' in item ? item.progress : undefined,
+      })),
     [section.movies, section.tvShows],
   )
 
@@ -60,10 +64,10 @@ export default function SectionPage({ sectionKey }: SectionPageProps) {
       <div>
         <header className="mb-4">
           <h1 className="text-xl font-bold">{label}</h1>
-          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">共 {simpleTitles.length} 项</p>
+          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">共 {simpleItems.length} 项</p>
         </header>
 
-        <SimpleTitleList titles={simpleTitles} emptyText="暂无内容" />
+        <SimpleTitleList items={simpleItems} emptyText="暂无内容" />
       </div>
     )
   }
