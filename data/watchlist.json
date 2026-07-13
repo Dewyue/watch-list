@@ -2,165 +2,508 @@
   "version": 1,
   "sections": {
     "watching": {
-      "movies": [
-        {
-          "title": "沙丘2",
-          "genre": "科幻",
-          "synopsis": "保罗与弗雷曼人联手，在厄拉科斯星球上继续对抗哈克南家族与皇帝势力。",
-          "duration": "166分钟",
-          "actors": ["提莫西·查拉梅", "赞达亚", "丽贝卡·弗格森"],
-          "director": "丹尼斯·维伦纽瓦"
-        }
-      ],
+      "movies": [],
       "tvShows": [
         {
-          "title": "三体",
-          "country": "中国",
-          "genre": "科幻",
-          "platform": "腾讯视频",
-          "synopsis": "根据刘慈欣同名小说改编，讲述地球文明与三体文明的首次接触。",
-          "seasons": 1,
-          "episodes": 30
+          "title": "破产姐妹",
+          "country": "美国",
+          "genre": "喜剧",
+          "synopsis": "进度：第1-12季"
         },
         {
-          "title": "黑暗荣耀",
+          "title": "Running Man",
           "country": "韩国",
-          "genre": "悬疑",
-          "platform": "Netflix",
-          "synopsis": "曾在学生时代遭受霸凌的女人，在多年后对加害者们展开精密复仇。",
-          "seasons": 2,
-          "episodes": 16
+          "genre": "综艺",
+          "synopsis": "进度：第8季第2期"
+        },
+        {
+          "title": "野狗骨头",
+          "country": "中国",
+          "genre": "剧情",
+          "synopsis": "进度：第1季"
         }
       ]
     },
     "urgent": {
-      "movies": [
-        {
-          "title": "奥本海默",
-          "genre": "传记",
-          "synopsis": "讲述「原子弹之父」罗伯特·奥本海默在曼哈顿计划中的经历与内心挣扎。",
-          "duration": "180分钟",
-          "actors": ["基里安·墨菲", "艾米莉·布朗特", "马特·达蒙"],
-          "director": "克里斯托弗·诺兰"
-        },
-        {
-          "title": "花月杀手",
-          "genre": "犯罪",
-          "synopsis": "20 世纪 20 年代俄克拉荷马州奥塞奇族连环谋杀案的真实故事。",
-          "duration": "206分钟",
-          "actors": ["莱昂纳多·迪卡普里奥", "罗伯特·德尼罗", "莉莉·格莱斯顿"],
-          "director": "马丁·斯科塞斯"
-        }
-      ],
+      "movies": [],
       "tvShows": [
         {
-          "title": "真探 第四季",
-          "country": "美国",
-          "genre": "悬疑",
-          "platform": "HBO",
-          "synopsis": "阿拉斯加小镇离奇失踪案，两名女警在极夜中追查真相。",
-          "seasons": 1,
-          "episodes": 6
+          "title": "扯淡地球史",
+          "country": "英国",
+          "genre": "纪录片",
+          "platform": "BBC"
+        },
+        {
+          "title": "在这灿烂的季节",
+          "country": "韩国",
+          "genre": "剧情"
+        },
+        {
+          "title": "地球脉动",
+          "country": "英国",
+          "genre": "纪录片",
+          "platform": "BBC",
+          "synopsis": "第2季"
+        },
+        {
+          "title": "顶楼",
+          "country": "韩国",
+          "genre": "悬疑"
+        },
+        {
+          "title": "检察官",
+          "country": "韩国",
+          "genre": "悬疑"
         }
       ]
     },
     "unfinished": {
-      "movies": [
-        {
-          "title": "坠落的审判",
-          "genre": "剧情",
-          "synopsis": "丈夫坠楼身亡后，妻子成为首要嫌疑人，庭审逐渐揭开婚姻真相。",
-          "duration": "151分钟",
-          "actors": ["桑德拉·惠勒", "斯万·阿劳德"],
-          "director": "茹斯汀·特里耶"
-        }
-      ],
+      "movies": [],
       "tvShows": [
         {
-          "title": "漫长的季节",
+          "title": "少年英雄方世玉",
           "country": "中国",
-          "genre": "悬疑",
-          "platform": "腾讯视频",
-          "synopsis": "一桩碎尸案串联起桦林小城三个时代里一群普通人的命运。",
-          "seasons": 1,
-          "episodes": 12
+          "genre": "武侠",
+          "synopsis": "进度：第1季"
         },
         {
-          "title": "怒呛人生",
+          "title": "苦尽柑来遇见你",
+          "country": "韩国",
+          "genre": "剧情",
+          "synopsis": "进度：第4集"
+        },
+        {
+          "title": "暗黑",
+          "country": "德国",
+          "genre": "科幻悬疑",
+          "platform": "Netflix",
+          "synopsis": "进度：第1-2季"
+        },
+        {
+          "title": "权力的游戏",
+          "country": "美国",
+          "genre": "奇幻",
+          "platform": "HBO",
+          "synopsis": "进度：第1季起"
+        },
+        {
+          "title": "毛骗",
+          "country": "中国",
+          "genre": "悬疑",
+          "synopsis": "进度：第1-3季"
+        },
+        {
+          "title": "寻妈记",
           "country": "美国",
           "genre": "喜剧",
-          "platform": "Netflix",
-          "synopsis": "一次路怒事件让两个陌生人的生活彻底纠缠在一起。",
-          "seasons": 1,
-          "episodes": 10
+          "synopsis": "进度：第1-8季"
         }
       ]
     },
     "todo": {
       "movies": [
-        {
-          "title": "可怜的东西",
-          "genre": "奇幻",
-          "synopsis": "年轻女子在科学怪人的实验中重获新生，踏上探索自由与欲望的旅程。",
-          "duration": "141分钟",
-          "actors": ["艾玛·斯通", "马克·鲁法洛", "威廉·达福"],
-          "director": "欧格斯·兰斯莫斯"
-        },
-        {
-          "title": "利益区域",
-          "genre": "历史",
-          "synopsis": "以奥斯维辛集中营指挥官一家在围墙另一侧的日常生活为视角。",
-          "duration": "105分钟",
-          "actors": ["克里斯蒂安·弗里德尔", "桑德拉·惠勒"],
-          "director": "乔纳森·格雷泽"
-        }
+        { "title": "奇幻森林", "genre": "优先好片" },
+        { "title": "少年派的奇幻漂流", "genre": "优先好片" },
+        { "title": "荒野猎人", "genre": "优先好片" },
+        { "title": "七宗罪", "genre": "优先好片", "synopsis": "布拉德·皮特" },
+        { "title": "禁闭岛", "genre": "优先好片" },
+        { "title": "消失的爱人", "genre": "优先好片", "synopsis": "悬疑反转" },
+        { "title": "低俗小说", "genre": "优先好片" },
+        { "title": "疯狂的麦克斯", "genre": "优先好片" },
+        { "title": "揭秘日", "genre": "优先好片" },
+        { "title": "呼啸山庄", "genre": "优先好片" },
+        { "title": "碟中谍", "genre": "优先好片" },
+        { "title": "时间规划局", "genre": "优先好片" },
+        { "title": "永无止境", "genre": "优先好片" },
+        { "title": "神奇动物在哪里", "genre": "优先好片" },
+
+        { "title": "黑镜", "genre": "其他" },
+        { "title": "惊天魔盗团2", "genre": "其他" },
+        { "title": "惊天魔盗团3", "genre": "其他" },
+        { "title": "霸王别姬", "genre": "其他" },
+        { "title": "信条", "genre": "其他" },
+        { "title": "教父三部曲", "genre": "其他" },
+        { "title": "灭绝", "genre": "其他", "synopsis": "2018" },
+        { "title": "惊变28年", "genre": "其他" },
+        { "title": "康斯坦丁", "genre": "其他" },
+        { "title": "创：战神", "genre": "其他" },
+        { "title": "蝙蝠侠3", "genre": "其他" },
+
+        { "title": "死亡录像", "genre": "灾难片" },
+        { "title": "幸存者", "genre": "灾难片" },
+        { "title": "病毒感染", "genre": "灾难片" },
+        { "title": "血疫", "genre": "灾难片" },
+        { "title": "流感", "genre": "灾难片" },
+        { "title": "铁线虫入侵", "genre": "灾难片" },
+        { "title": "传染病", "genre": "灾难片" },
+        { "title": "极度恐慌", "genre": "灾难片" },
+        { "title": "天外来菌", "genre": "灾难片" },
+        { "title": "末日病毒", "genre": "灾难片" },
+
+        { "title": "老男孩", "genre": "其他", "synopsis": "韩国悬疑" },
+        { "title": "真心半解", "genre": "其他", "synopsis": "les" },
+        { "title": "自杀房间", "genre": "其他", "synopsis": "迷幻 cult 片" },
+        { "title": "虎胆龙威", "genre": "其他" },
+        { "title": "兰戈", "genre": "其他" },
+
+        { "title": "僵尸肖恩", "genre": "惊悚悬疑" },
+        { "title": "当邪恶潜伏时", "genre": "惊悚悬疑", "synopsis": "恐怖" },
+        { "title": "万能钥匙", "genre": "惊悚悬疑", "synopsis": "悬疑惊悚" },
+        { "title": "直到黎明", "genre": "惊悚悬疑", "synopsis": "恐怖" },
+        { "title": "救命解药", "genre": "惊悚悬疑" },
+        { "title": "记忆之夜", "genre": "惊悚悬疑" },
+        { "title": "同甘共苦", "genre": "惊悚悬疑", "synopsis": "惊悚" },
+
+        { "title": "镖人", "genre": "其它" },
+        { "title": "夜店", "genre": "其它" },
+        { "title": "男人要自爱", "genre": "其它" },
+        { "title": "坠落2", "genre": "其它" },
+        { "title": "最佳出价", "genre": "其它" },
+        { "title": "三夫", "genre": "其它" },
+        { "title": "彗星来的那一夜", "genre": "其它" },
+        { "title": "黑客帝国3", "genre": "其它" },
+        { "title": "黑客帝国4", "genre": "其它" },
+        { "title": "绿皮书", "genre": "其它" },
+        { "title": "火星救援", "genre": "其它" },
+        { "title": "小鬼当家", "genre": "其它" },
+        { "title": "湮灭", "genre": "其它" },
+        { "title": "分歧者", "genre": "其它" },
+        { "title": "捕风捉影", "genre": "其它" },
+        { "title": "伊甸", "genre": "其它" },
+        { "title": "秘密", "genre": "其它" },
+        { "title": "名侦探柯南：独眼的残像", "genre": "其它" },
+        { "title": "驯龙高手2", "genre": "其它" },
+        { "title": "驯龙高手3", "genre": "其它" },
+        { "title": "索邦大学谜案", "genre": "其它" },
+        { "title": "致命游戏", "genre": "其它" },
+        { "title": "夺命深渊", "genre": "其它" },
+        { "title": "灭顶之灾", "genre": "其它" },
+        { "title": "神圣之夜：恶魔猎人", "genre": "其它", "synopsis": "马东锡" },
+        { "title": "死期将至", "genre": "其它" },
+        { "title": "致命伴旅", "genre": "其它" },
+        { "title": "天启Z：完结的起点", "genre": "其它" },
+        { "title": "恐惧街", "genre": "其它" },
+        { "title": "布达佩斯大饭店", "genre": "其它", "synopsis": "色彩很好" },
+        { "title": "杀戮演绎", "genre": "其它" },
+        { "title": "国王的演讲", "genre": "其它", "synopsis": "系列：至暗时刻、敦刻尔克、赎罪" },
+        { "title": "控方证人", "genre": "其它" },
+        { "title": "心迷宫", "genre": "其它" },
+        { "title": "血观音", "genre": "其它" },
+        { "title": "从二十一世纪安全撤离", "genre": "其它" },
+        { "title": "骇人来电", "genre": "其它", "synopsis": "只听声音" },
+        { "title": "还有明天", "genre": "其它" },
+        { "title": "初步举证", "genre": "其它" },
+        { "title": "灵异第六感", "genre": "其它" },
+        { "title": "杀人者的记忆法", "genre": "其它" },
+        { "title": "漫影寻踪", "genre": "其它" },
+        { "title": "忠犬八公", "genre": "其它" },
+        { "title": "新警察故事", "genre": "其它", "synopsis": "成龙、吴彦祖" },
+        { "title": "哈利·波特（剩余）", "genre": "其它" },
+        { "title": "海神号", "genre": "其它" },
+        { "title": "Hello！树先生", "genre": "其它", "synopsis": "王宝强" },
+        { "title": "暮光之城", "genre": "其它", "synopsis": "第1-4部" },
+        { "title": "魔女的条件", "genre": "其它", "synopsis": "宫崎骏" },
+        { "title": "你想活出怎样的人生", "genre": "其它" },
+        { "title": "苍鹭与少年", "genre": "其它" },
+        { "title": "史密斯夫妇", "genre": "其它", "synopsis": "皮特" },
+        { "title": "本杰明·巴顿奇事", "genre": "其它" },
+        { "title": "第六感生死缘", "genre": "其它" },
+        { "title": "这么多年", "genre": "其它", "synopsis": "张新成" },
+        { "title": "龙卷风", "genre": "其它" },
+        { "title": "魔女", "genre": "其它" },
+        { "title": "前任系列", "genre": "其它" },
+        { "title": "野性的呼唤", "genre": "其它" },
+        { "title": "Gloria", "genre": "其它", "synopsis": "这杀原型" },
+        { "title": "独领风骚", "genre": "其它" },
+        { "title": "可怜的东西", "genre": "其它", "synopsis": "颠、恶心" },
+        { "title": "杀出狂人镇", "genre": "其它" },
+        { "title": "致命弯道", "genre": "其它" },
+        { "title": "我知道你去年夏天做了什么", "genre": "其它" },
+        { "title": "傲慢与偏见", "genre": "其它" },
+        { "title": "红眼航班", "genre": "其它" },
+        { "title": "小姐好白", "genre": "其它" },
+        { "title": "都灵之马", "genre": "其它", "synopsis": "黑白" },
+        { "title": "新喜剧之王", "genre": "其它", "synopsis": "周星驰" },
+        { "title": "情圣", "genre": "其它" },
+        { "title": "重生", "genre": "其它" },
+        { "title": "峡谷", "genre": "其它", "synopsis": "丧尸动作爱情" },
+        { "title": "人间中毒", "genre": "其它", "synopsis": "带点颜色" },
+        { "title": "王力宏", "genre": "其它" },
+        { "title": "日正当中的星空", "genre": "其它" },
+        { "title": "非常幸运", "genre": "其它" },
+        { "title": "危情生命线", "genre": "其它" },
+        { "title": "无问西东", "genre": "其它" },
+        { "title": "雷霆战警", "genre": "其它" }
       ],
       "tvShows": [
         {
-          "title": "繁花",
-          "country": "中国",
-          "genre": "剧情",
-          "platform": "腾讯视频",
-          "synopsis": "90 年代上海黄河路，小人物阿宝在时代浪潮中打拼成宝总。",
-          "seasons": 1,
-          "episodes": 30
+          "title": "纸钞屋",
+          "country": "西班牙",
+          "genre": "犯罪",
+          "platform": "Netflix"
         },
         {
-          "title": "熊家餐馆 第三季",
+          "title": "欢愉的艺术",
           "country": "美国",
           "genre": "剧情",
-          "platform": "Hulu",
-          "synopsis": "Carmy 与团队继续经营三明治店，追求米其林星级的同时面对内心创伤。",
-          "seasons": 1,
-          "episodes": 10
+          "synopsis": "ENTP"
+        },
+        {
+          "title": "绝命毒师",
+          "country": "美国",
+          "genre": "犯罪"
+        },
+        {
+          "title": "星期三",
+          "country": "美国",
+          "genre": "奇幻",
+          "platform": "Netflix"
+        },
+        {
+          "title": "白莲花度假村",
+          "country": "美国",
+          "genre": "剧情",
+          "platform": "HBO"
+        },
+        {
+          "title": "911",
+          "country": "美国",
+          "genre": "灾难",
+          "synopsis": "灾难片"
+        },
+        {
+          "title": "致命女人",
+          "country": "美国",
+          "genre": "悬疑"
+        },
+        {
+          "title": "美国恐怖故事",
+          "country": "美国",
+          "genre": "恐怖"
+        },
+        {
+          "title": "保姆俱乐部",
+          "country": "美国",
+          "genre": "青春"
+        },
+        {
+          "title": "西部世界",
+          "country": "美国",
+          "genre": "科幻",
+          "platform": "HBO"
+        },
+        {
+          "title": "神烦警探",
+          "country": "美国",
+          "genre": "喜剧"
+        },
+        {
+          "title": "神探夏洛克",
+          "country": "英国",
+          "genre": "悬疑",
+          "synopsis": "第1-4季"
+        },
+        {
+          "title": "我们有人在说谎",
+          "country": "美国",
+          "genre": "悬疑",
+          "platform": "Netflix"
+        },
+        {
+          "title": "破产姐妹",
+          "country": "美国",
+          "genre": "喜剧"
+        },
+        {
+          "title": "爱，死亡和机器人",
+          "country": "美国",
+          "genre": "动画",
+          "platform": "Netflix"
+        },
+        {
+          "title": "戴洛克小镇",
+          "country": "美国",
+          "genre": "悬疑"
+        },
+        {
+          "title": "Dark Matter",
+          "country": "美国",
+          "genre": "科幻悬疑",
+          "platform": "Apple TV+"
+        },
+        {
+          "title": "吸血鬼日记",
+          "country": "美国",
+          "genre": "奇幻"
+        },
+        {
+          "title": "致命钥匙",
+          "country": "美国",
+          "genre": "奇幻",
+          "platform": "Netflix",
+          "synopsis": "怪奇物语类似"
+        },
+        {
+          "title": "爱你",
+          "country": "中国",
+          "genre": "爱情",
+          "synopsis": "第6集"
+        },
+        {
+          "title": "相思令",
+          "country": "中国",
+          "genre": "古装",
+          "synopsis": "宋威龙、Angelababy"
+        },
+        {
+          "title": "凤囚凰",
+          "country": "中国",
+          "genre": "古装"
+        },
+        {
+          "title": "瓦舍江湖",
+          "country": "中国",
+          "genre": "喜剧",
+          "synopsis": "第二季"
+        },
+        {
+          "title": "完美的她",
+          "country": "中国",
+          "genre": "爱情",
+          "synopsis": "罗正、徐艺洋"
+        },
+        {
+          "title": "信号",
+          "country": "韩国",
+          "genre": "悬疑"
+        },
+        {
+          "title": "王国",
+          "country": "韩国",
+          "genre": "丧尸",
+          "platform": "Netflix"
+        },
+        {
+          "title": "W两个世界",
+          "country": "韩国",
+          "genre": "奇幻"
+        },
+        {
+          "title": "请回答1988",
+          "country": "韩国",
+          "genre": "家庭"
+        },
+        {
+          "title": "闪亮的西瓜",
+          "country": "韩国",
+          "genre": "奇幻",
+          "synopsis": "第1季"
+        },
+        {
+          "title": "今天也很可爱的狗",
+          "country": "韩国",
+          "genre": "爱情",
+          "synopsis": "第7集"
+        },
+        {
+          "title": "顶楼",
+          "country": "韩国",
+          "genre": "悬疑"
+        },
+        {
+          "title": "海妖的呼唤",
+          "country": "韩国",
+          "genre": "综艺",
+          "synopsis": "第1季"
+        },
+        {
+          "title": "社内相亲",
+          "country": "韩国",
+          "genre": "爱情",
+          "synopsis": "第5集"
+        },
+        {
+          "title": "模范出租车",
+          "country": "韩国",
+          "genre": "动作",
+          "synopsis": "第3季"
+        },
+        {
+          "title": "黑暗荣耀",
+          "country": "韩国",
+          "genre": "悬疑",
+          "platform": "Netflix"
+        },
+        {
+          "title": "机智的医生生活",
+          "country": "韩国",
+          "genre": "医疗"
+        },
+        {
+          "title": "机智的监狱生活",
+          "country": "韩国",
+          "genre": "剧情"
+        },
+        {
+          "title": "眼泪女王",
+          "country": "韩国",
+          "genre": "爱情"
+        },
+        {
+          "title": "命定之人",
+          "country": "韩国",
+          "genre": "悬疑",
+          "platform": "Netflix"
+        },
+        {
+          "title": "秘密森林",
+          "country": "韩国",
+          "genre": "悬疑"
+        },
+        {
+          "title": "重启人生",
+          "country": "日本",
+          "genre": "喜剧",
+          "synopsis": "平淡日剧"
+        },
+        {
+          "title": "死亡万花筒",
+          "country": "中国",
+          "genre": "悬疑"
         }
       ]
     }
   },
   "others": [
     {
-      "title": "葬送的芙莉莲",
+      "title": "动物狂想曲",
       "type": "anime",
-      "synopsis": "精灵魔法使芙莉莲在勇者逝世后踏上了解人类与自身情感的旅程。",
-      "progress": "第 28 集"
+      "synopsis": "BEASTARS"
     },
     {
-      "title": "迷宫饭",
-      "type": "anime",
-      "synopsis": "冒险者在地下迷宫中烹饪魔物料理，展开奇幻美食之旅。",
-      "progress": "第 24 集"
+      "title": "伊藤润二：漩涡",
+      "type": "anime"
     },
     {
-      "title": "再见绘梨",
+      "title": "坏想法日记",
+      "type": "manga"
+    },
+    {
+      "title": "坠落JK与废人老师",
       "type": "manga",
-      "synopsis": "少年用摄像机记录与绝症少女绘梨的相遇，在影像中拼凑记忆与告别。",
-      "progress": "已完结，1 卷"
+      "synopsis": "动漫之家 App"
     },
     {
-      "title": "地球脉动 第三季",
-      "type": "documentary",
-      "synopsis": "BBC 自然纪录片，展现地球上最壮丽的野生动物与栖息地。",
-      "progress": "8 集"
+      "title": "重返狼群",
+      "type": "documentary"
+    },
+    {
+      "title": "黑太阳731",
+      "type": "documentary"
+    },
+    {
+      "title": "刀的哲学",
+      "type": "documentary"
     }
   ]
 }
