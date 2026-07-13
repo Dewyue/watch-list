@@ -1,4 +1,8 @@
+import { readTmdbCache, writeTmdbCache } from './tmdbCache'
+
 const TMDB_KEY_STORAGE = 'watch-list-tmdb-key'
+const TMDB_BASE = 'https://api.themoviedb.org/3'
+const FETCH_TIMEOUT_MS = 8000
 
 export function getTmdbApiKey(): string {
   return localStorage.getItem(TMDB_KEY_STORAGE)?.trim() ?? ''
@@ -7,8 +11,6 @@ export function getTmdbApiKey(): string {
 export function setTmdbApiKey(key: string) {
   localStorage.setItem(TMDB_KEY_STORAGE, key.trim())
 }
-
-const TMDB_BASE = 'https://api.themoviedb.org/3'
 
 const GENRE_ZH: Record<string, string> = {
   Action: '动作',
@@ -59,7 +61,6 @@ type TmdbSearchResult = {
   release_date?: string
   first_air_date?: string
   overview?: string
-  media_type?: string
 }
 
 type TmdbMovieDetail = {
@@ -107,13 +108,30 @@ function mapCountry(codes: string[] | undefined, countries?: { iso_3166_1: strin
   return COUNTRY_ZH[code] ?? code
 }
 
-async function tmdbFetch<T>(path: string, apiKey: string): Promise<T> {
-  const url = `${TMDB_BASE}${path}${path.includes('?') ? '&' : '?'}api_key=${apiKey}&language=zh-CN`
-  const res = await fetch(url)
-  if (!res.ok) {
-    throw new Error(res.status === 401 ? 'TMDB API Key 无效' : `TMDB 请求失败 (${res.status})`)
+async function tmdbFetch<T>(path: string, apiKey: string, cacheKey: string): Promise<T> {
+  const cached = readTmdbCache<T>(cacheKey)
+  if (cached) return cached
+
+  const controller = new AbortController()
+  const timer = window.setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS)
+
+  try {
+    const url = `${TMDB_BASE}${path}${path.includes('?') ? '&' : '?'}api_key=${apiKey}&language=zh-CN`
+    const res = await fetch(url, { signal: controller.signal })
+    if (!res.ok) {
+      throw new Error(res.status === 401 ? 'TMDB API Key 无效' : `TMDB 请求失败 (${res.status})`)
+    }
+    const data = (await res.json()) as T
+    writeTmdbCache(cacheKey, data)
+    return data
+  } catch (err) {
+    if (err instanceof Error && err.name === 'AbortError') {
+      throw new Error('查询超时，请稍后重试或使用「仅添加名称」')
+    }
+    throw err
+  } finally {
+    window.clearTimeout(timer)
   }
-  return res.json() as Promise<T>
 }
 
 export async function searchTmdb(
@@ -122,9 +140,11 @@ export async function searchTmdb(
   apiKey: string,
 ): Promise<TmdbSearchHit[]> {
   const endpoint = kind === 'movie' ? '/search/movie' : '/search/tv'
+  const cacheKey = `search:${kind}:${query.trim().toLowerCase()}`
   const data = await tmdbFetch<{ results: TmdbSearchResult[] }>(
     `${endpoint}?query=${encodeURIComponent(query)}`,
     apiKey,
+    cacheKey,
   )
 
   return (data.results ?? []).slice(0, 5).map((item) => ({
@@ -140,6 +160,7 @@ export async function fetchMovieDetails(id: number, apiKey: string) {
   const data = await tmdbFetch<TmdbMovieDetail>(
     `/movie/${id}?append_to_response=credits`,
     apiKey,
+    `movie:${id}`,
   )
 
   const director = data.credits?.crew?.find((person) => person.job === 'Director')?.name
@@ -156,7 +177,11 @@ export async function fetchMovieDetails(id: number, apiKey: string) {
 }
 
 export async function fetchTVDetails(id: number, apiKey: string) {
-  const data = await tmdbFetch<TmdbTVDetail>(`/tv/${id}?append_to_response=credits`, apiKey)
+  const data = await tmdbFetch<TmdbTVDetail>(
+    `/tv/${id}?append_to_response=credits`,
+    apiKey,
+    `tv:${id}`,
+  )
 
   const platform = data.networks?.[0]?.name
 
@@ -171,38 +196,27 @@ export async function fetchTVDetails(id: number, apiKey: string) {
   }
 }
 
-export type LookupResult =
-  | (Awaited<ReturnType<typeof fetchMovieDetails>> & { needPick?: never })
-  | (Awaited<ReturnType<typeof fetchTVDetails>> & { needPick?: never })
-  | { needPick: true; hits: TmdbSearchHit[] }
-
-export async function lookupMedia(
-  title: string,
-  kind: 'movie' | 'tv',
-  apiKey: string,
-  pickId?: number,
-): Promise<LookupResult> {
-  if (pickId) {
-    return kind === 'movie' ? fetchMovieDetails(pickId, apiKey) : fetchTVDetails(pickId, apiKey)
+export function movieFromHit(hit: TmdbSearchHit) {
+  return {
+    title: hit.title,
+    genre: '未分类',
+    synopsis: hit.overview || undefined,
   }
-
-  const hits = await searchTmdb(title, kind, apiKey)
-  if (hits.length === 0) {
-    throw new Error('未找到匹配结果，请检查片名或尝试英文原名')
-  }
-  if (hits.length === 1) {
-    return kind === 'movie'
-      ? fetchMovieDetails(hits[0].id, apiKey)
-      : fetchTVDetails(hits[0].id, apiKey)
-  }
-
-  return { needPick: true as const, hits }
 }
 
-export function isDocumentaryGenre(genre: string) {
-  return genre === '纪录片'
+export function tvFromHit(hit: TmdbSearchHit) {
+  return {
+    title: hit.title,
+    country: '未分类',
+    genre: '未分类',
+    synopsis: hit.overview || undefined,
+  }
 }
 
-export function isAnimationGenre(genre: string) {
-  return genre === '动画'
+export async function enrichMovie(id: number, apiKey: string) {
+  return fetchMovieDetails(id, apiKey)
+}
+
+export async function enrichTV(id: number, apiKey: string) {
+  return fetchTVDetails(id, apiKey)
 }

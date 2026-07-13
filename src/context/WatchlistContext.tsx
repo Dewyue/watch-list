@@ -9,6 +9,9 @@ import {
   importWatchlist,
   loadWatchlistFromStorage,
   moveItem,
+  patchMovie,
+  patchOtherItem,
+  patchTVShow,
   resetWatchlistStorage,
   saveWatchlistToStorage,
   updateProgress,
@@ -20,9 +23,12 @@ type WatchlistContextValue = {
   setProgress: (section: SectionKey, id: string, kind: MediaKind, progress: string) => void
   moveTo: (from: SectionKey, to: SectionKey, id: string, kind: MediaKind, progress?: string) => void
   remove: (section: SectionKey, id: string, kind: MediaKind) => void
-  addMovie: (section: SectionKey, movie: Movie) => void
-  addTV: (section: SectionKey, show: TVShow) => void
-  addOther: (item: OtherItem) => void
+  addMovie: (section: SectionKey, movie: Movie) => string
+  addTV: (section: SectionKey, show: TVShow) => string
+  addOther: (item: OtherItem) => string
+  patchMovieItem: (section: SectionKey, id: string, patch: Partial<Movie>) => void
+  patchTVItem: (section: SectionKey, id: string, patch: Partial<TVShow>) => void
+  patchOther: (id: string, patch: Partial<OtherItem>) => void
   reset: () => void
   exportJson: () => string
   importJson: (json: string) => void
@@ -51,13 +57,31 @@ export function WatchlistProvider({ children }: { children: ReactNode }) {
         persist(deleteItem(data, section, id, kind))
       },
       addMovie: (section, movie) => {
-        persist(addMovie(data, section, movie))
+        const id = movie.id ?? crypto.randomUUID()
+        const next = addMovie(data, section, { ...movie, id })
+        persist(next)
+        return id
       },
       addTV: (section, show) => {
-        persist(addTVShow(data, section, show))
+        const id = show.id ?? crypto.randomUUID()
+        const next = addTVShow(data, section, { ...show, id })
+        persist(next)
+        return id
       },
       addOther: (item) => {
-        persist(addOtherItem(data, item))
+        const id = item.id ?? crypto.randomUUID()
+        const next = addOtherItem(data, { ...item, id })
+        persist(next)
+        return id
+      },
+      patchMovieItem: (section, id, patch) => {
+        persist(patchMovie(data, section, id, patch))
+      },
+      patchTVItem: (section, id, patch) => {
+        persist(patchTVShow(data, section, id, patch))
+      },
+      patchOther: (id, patch) => {
+        persist(patchOtherItem(data, id, patch))
       },
       reset: () => {
         persist(resetWatchlistStorage())

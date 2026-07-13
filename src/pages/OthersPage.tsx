@@ -14,7 +14,7 @@ function otherDetails(item: OtherItem) {
 }
 
 export default function OthersPage() {
-  const { data, addOther } = useWatchlist()
+  const { data, addOther, patchOther } = useWatchlist()
   const items = data.others
   const groups = useMemo(() => getOtherGroups(items), [items])
   const [addOpen, setAddOpen] = useState(false)
@@ -57,9 +57,12 @@ export default function OthersPage() {
         open={addOpen}
         target={{ type: 'others' }}
         onClose={() => setAddOpen(false)}
-        onAddMovie={() => {}}
-        onAddTV={() => {}}
+        onAddMovie={() => ''}
+        onAddTV={() => ''}
         onAddOther={addOther}
+        onPatchMovie={() => {}}
+        onPatchTV={() => {}}
+        onPatchOther={patchOther}
       />
     </div>
   )

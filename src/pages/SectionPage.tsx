@@ -49,7 +49,8 @@ function tvDetails(show: TVShow) {
 }
 
 export default function SectionPage({ sectionKey }: SectionPageProps) {
-  const { data, setProgress, moveTo, remove, addMovie, addTV } = useWatchlist()
+  const { data, setProgress, moveTo, remove, addMovie, addTV, patchMovieItem, patchTVItem } =
+    useWatchlist()
   const section = data.sections[sectionKey]
   const label = SECTIONS.find((s) => s.key === sectionKey)?.label ?? ''
   const isSimple = SIMPLE_SECTIONS.includes(sectionKey)
@@ -211,7 +212,10 @@ export default function SectionPage({ sectionKey }: SectionPageProps) {
         onClose={() => setAddOpen(false)}
         onAddMovie={addMovie}
         onAddTV={addTV}
-        onAddOther={() => {}}
+        onAddOther={() => ''}
+        onPatchMovie={patchMovieItem}
+        onPatchTV={patchTVItem}
+        onPatchOther={() => {}}
       />
     </div>
   )

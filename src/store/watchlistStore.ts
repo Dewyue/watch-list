@@ -161,6 +161,44 @@ export function addOtherItem(data: WatchlistData, item: OtherItem): WatchlistDat
   return next
 }
 
+export function patchMovie(
+  data: WatchlistData,
+  section: SectionKey,
+  id: string,
+  patch: Partial<Movie>,
+): WatchlistData {
+  const next = structuredClone(data)
+  const item = next.sections[section].movies.find((entry) => entry.id === id)
+  if (!item) return data
+  Object.assign(item, patch)
+  return next
+}
+
+export function patchTVShow(
+  data: WatchlistData,
+  section: SectionKey,
+  id: string,
+  patch: Partial<TVShow>,
+): WatchlistData {
+  const next = structuredClone(data)
+  const item = next.sections[section].tvShows.find((entry) => entry.id === id)
+  if (!item) return data
+  Object.assign(item, patch)
+  return next
+}
+
+export function patchOtherItem(
+  data: WatchlistData,
+  id: string,
+  patch: Partial<OtherItem>,
+): WatchlistData {
+  const next = structuredClone(data)
+  const item = next.others.find((entry) => entry.id === id)
+  if (!item) return data
+  Object.assign(item, patch)
+  return next
+}
+
 export function exportWatchlist(data: WatchlistData): string {
   return JSON.stringify(data, null, 2)
 }
