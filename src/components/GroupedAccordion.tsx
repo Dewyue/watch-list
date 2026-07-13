@@ -10,14 +10,18 @@ type GroupedAccordionProps<T extends { title: string }> = {
   groups: Map<string, T[]>
   getDetails: (item: T) => Detail
   emptyText: string
+  defaultCollapsed?: boolean
 }
 
 export default function GroupedAccordion<T extends { title: string }>({
   groups,
   getDetails,
   emptyText,
+  defaultCollapsed = false,
 }: GroupedAccordionProps<T>) {
-  const [openGroups, setOpenGroups] = useState<Set<string>>(() => new Set(groups.keys()))
+  const [openGroups, setOpenGroups] = useState<Set<string>>(
+    () => (defaultCollapsed ? new Set() : new Set(groups.keys())),
+  )
   const [openItems, setOpenItems] = useState<Set<string>>(new Set())
 
   if (groups.size === 0) {

@@ -1,5 +1,7 @@
 export type SectionKey = 'watching' | 'urgent' | 'unfinished' | 'todo'
 
+export const SIMPLE_SECTIONS: SectionKey[] = ['watching', 'urgent', 'unfinished']
+
 export type OtherType = 'anime' | 'manga' | 'documentary' | 'star' | 'other'
 
 export type TVGroupMode = 'country' | 'genre' | 'platform'
@@ -19,6 +21,7 @@ export interface TVShow {
   genre?: string
   platform?: string
   synopsis?: string
+  progress?: string
   seasons?: number
   episodes?: number
 }

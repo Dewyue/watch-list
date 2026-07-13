@@ -24,7 +24,12 @@ export default function OthersPage() {
         </p>
       </header>
 
-      <GroupedAccordion groups={groups} getDetails={otherDetails} emptyText="暂无内容" />
+      <GroupedAccordion
+        groups={groups}
+        getDetails={otherDetails}
+        emptyText="暂无内容"
+        defaultCollapsed
+      />
     </div>
   )
 }

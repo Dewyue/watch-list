@@ -1,10 +1,11 @@
 import { useMemo, useState } from 'react'
 import GroupToggle from '../components/GroupToggle'
 import GroupedAccordion from '../components/GroupedAccordion'
+import SimpleTitleList from '../components/SimpleTitleList'
 import SubTabBar from '../components/SubTabBar'
 import { getSection } from '../data/loadWatchlist'
 import type { Movie, SectionKey, TVGroupMode, TVShow } from '../types'
-import { getMovieGroups, getTVGroups, SECTIONS } from '../types'
+import { getMovieGroups, getTVGroups, SECTIONS, SIMPLE_SECTIONS } from '../types'
 
 type SectionPageProps = {
   sectionKey: SectionKey
@@ -27,6 +28,7 @@ function tvDetails(show: TVShow) {
 
   return [
     { label: '简介', value: show.synopsis ?? '' },
+    { label: '进度', value: show.progress ?? '' },
     { label: '季数/集数', value: seasonEp },
     { label: '国家', value: show.country ?? '' },
     { label: '类别', value: show.genre ?? '' },
@@ -37,6 +39,13 @@ function tvDetails(show: TVShow) {
 export default function SectionPage({ sectionKey }: SectionPageProps) {
   const section = getSection(sectionKey)
   const label = SECTIONS.find((s) => s.key === sectionKey)?.label ?? ''
+  const isSimple = SIMPLE_SECTIONS.includes(sectionKey)
+
+  const simpleTitles = useMemo(
+    () => [...section.tvShows, ...section.movies].map((item) => item.title),
+    [section.movies, section.tvShows],
+  )
+
   const [subTab, setSubTab] = useState<'movies' | 'tv'>('movies')
   const [tvGroupMode, setTvGroupMode] = useState<TVGroupMode>('country')
 
@@ -45,6 +54,19 @@ export default function SectionPage({ sectionKey }: SectionPageProps) {
     () => getTVGroups(section.tvShows, tvGroupMode),
     [section.tvShows, tvGroupMode],
   )
+
+  if (isSimple) {
+    return (
+      <div>
+        <header className="mb-4">
+          <h1 className="text-xl font-bold">{label}</h1>
+          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">共 {simpleTitles.length} 项</p>
+        </header>
+
+        <SimpleTitleList titles={simpleTitles} emptyText="暂无内容" />
+      </div>
+    )
+  }
 
   return (
     <div>
@@ -67,11 +89,17 @@ export default function SectionPage({ sectionKey }: SectionPageProps) {
           groups={movieGroups}
           getDetails={movieDetails}
           emptyText="暂无电影"
+          defaultCollapsed
         />
       ) : (
         <>
           <GroupToggle active={tvGroupMode} onChange={setTvGroupMode} />
-          <GroupedAccordion groups={tvGroups} getDetails={tvDetails} emptyText="暂无电视剧" />
+          <GroupedAccordion
+            groups={tvGroups}
+            getDetails={tvDetails}
+            emptyText="暂无电视剧"
+            defaultCollapsed
+          />
         </>
       )}
     </div>
