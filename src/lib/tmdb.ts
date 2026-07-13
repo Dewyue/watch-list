@@ -1,4 +1,5 @@
 import { readTmdbCache, writeTmdbCache } from './tmdbCache'
+import type { OtherItem } from '../types'
 
 const TMDB_KEY_STORAGE = 'watch-list-tmdb-key'
 const TMDB_BASE = 'https://api.themoviedb.org/3'
@@ -184,6 +185,7 @@ export async function fetchTVDetails(id: number, apiKey: string) {
   )
 
   const platform = data.networks?.[0]?.name
+  const actors = data.credits?.cast?.slice(0, 5).map((person) => person.name) ?? []
 
   return {
     title: data.name,
@@ -191,6 +193,7 @@ export async function fetchTVDetails(id: number, apiKey: string) {
     genre: mapGenre(data.genres),
     platform,
     synopsis: data.overview || undefined,
+    actors: actors.length ? actors : undefined,
     seasons: data.number_of_seasons,
     episodes: data.number_of_episodes,
   }
@@ -219,4 +222,28 @@ export async function enrichMovie(id: number, apiKey: string) {
 
 export async function enrichTV(id: number, apiKey: string) {
   return fetchTVDetails(id, apiKey)
+}
+
+export function otherPatchFromMovie(movie: Awaited<ReturnType<typeof fetchMovieDetails>>): Partial<OtherItem> {
+  return {
+    title: movie.title,
+    synopsis: movie.synopsis,
+    duration: movie.duration,
+    actors: movie.actors,
+    director: movie.director,
+    genre: movie.genre,
+  }
+}
+
+export function otherPatchFromTV(show: Awaited<ReturnType<typeof fetchTVDetails>>): Partial<OtherItem> {
+  return {
+    title: show.title,
+    synopsis: show.synopsis,
+    country: show.country,
+    genre: show.genre,
+    platform: show.platform,
+    actors: show.actors,
+    seasons: show.seasons,
+    episodes: show.episodes,
+  }
 }

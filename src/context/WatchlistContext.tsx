@@ -5,6 +5,7 @@ import {
   addOtherItem,
   addTVShow,
   deleteItem,
+  deleteOtherItem,
   exportWatchlist,
   importWatchlist,
   loadWatchlistFromStorage,
@@ -23,6 +24,7 @@ type WatchlistContextValue = {
   setProgress: (section: SectionKey, id: string, kind: MediaKind, progress: string) => void
   moveTo: (from: SectionKey, to: SectionKey, id: string, kind: MediaKind, progress?: string) => void
   remove: (section: SectionKey, id: string, kind: MediaKind) => void
+  removeOther: (id: string) => void
   addMovie: (section: SectionKey, movie: Movie) => string
   addTV: (section: SectionKey, show: TVShow) => string
   addOther: (item: OtherItem) => string
@@ -55,6 +57,9 @@ export function WatchlistProvider({ children }: { children: ReactNode }) {
       },
       remove: (section, id, kind) => {
         persist(deleteItem(data, section, id, kind))
+      },
+      removeOther: (id) => {
+        persist(deleteOtherItem(data, id))
       },
       addMovie: (section, movie) => {
         const id = movie.id ?? crypto.randomUUID()

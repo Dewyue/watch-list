@@ -7,7 +7,8 @@
     "dev": "VITE_BASE_PATH=/ vite",
     "build": "tsc -b && vite build && cp dist/index.html dist/404.html",
     "lint": "oxlint",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "enrich": "bun run scripts/enrich_watchlist.ts"
   },
   "dependencies": {
     "react": "^19.2.7",

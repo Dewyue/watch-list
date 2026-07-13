@@ -11,6 +11,9 @@ node_modules
 dist
 dist-ssr
 *.local
+scripts/enrich-live.log
+scripts/enrich-log.txt
+scripts/enrich-progress.txt
 
 # Editor directories and files
 .vscode/*

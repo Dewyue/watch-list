@@ -28,6 +28,14 @@
 
 首次使用前，请在 **数据** 页免费注册 [TMDB](https://www.themoviedb.org/settings/api) 并保存 API Key。
 
+打开网站后会**自动**对全部条目批量补全一次（底部有进度条）；也可在 **数据** 页点「一键补全全部条目」手动重跑。你的备注（`note`）和观看进度不会被覆盖。
+
+开发者可用脚本更新种子数据：
+
+```bash
+TMDB_API_KEY=你的key bun run enrich
+```
+
 ## 栏目说明
 
 | 栏目 | 说明 |
@@ -72,7 +80,8 @@
 {
   "title": "片名（必填）",
   "genre": "类别（必填，用于分组）",
-  "synopsis": "简介（可选）",
+  "synopsis": "简介（可选，TMDB 联网导入）",
+  "note": "你自己的备注（可选，如「带点颜色」「周星驰」）",
   "duration": "148分钟（可选）",
   "actors": ["演员A", "演员B"],
   "director": "导演名（可选）"
@@ -87,8 +96,10 @@
   "country": "美国（可选，按国家分组用）",
   "genre": "悬疑（可选，按类别分组用）",
   "platform": "Netflix（可选，按平台分组用）",
-  "synopsis": "简介（可选）",
+  "synopsis": "简介（可选，TMDB 联网导入）",
+  "note": "你自己的备注（可选）",
   "progress": "S1E2（可选，观看进度）",
+  "actors": ["演员A", "演员B"],
   "seasons": 2,
   "episodes": 16
 }
@@ -120,10 +131,21 @@
 {
   "title": "作品名（必填）",
   "type": "anime",
-  "synopsis": "简介（可选）",
-  "progress": "第 12 集 / 已完结（可选）"
+  "synopsis": "简介（可选，TMDB 联网导入）",
+  "note": "你自己的备注（可选）",
+  "progress": "第 12 集 / 已完结（可选）",
+  "duration": "120分钟（可选）",
+  "actors": ["演员A"],
+  "director": "导演名（可选）",
+  "country": "日本（可选）",
+  "genre": "动画（可选）",
+  "platform": "B站（可选）",
+  "seasons": 1,
+  "episodes": 12
 }
 ```
+
+在 App 内点 **··· → 从 TMDB 补全详情**，可联网填充 `synopsis`、时长、主演、导演等；你的 `note` 不会被覆盖。
 
 ## 常见 JSON 错误
 

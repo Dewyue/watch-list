@@ -4,6 +4,8 @@ import {
   enrichTV,
   getTmdbApiKey,
   movieFromHit,
+  otherPatchFromMovie,
+  otherPatchFromTV,
   searchTmdb,
   tvFromHit,
   type TmdbSearchHit,
@@ -78,10 +80,12 @@ export default function AddItemModal({
     enrich
       .then((details) => {
         if (target.type === 'others') {
-          onPatchOther(itemId, {
-            title: details.title,
-            synopsis: details.synopsis,
-          })
+          onPatchOther(
+            itemId,
+            hit.kind === 'movie'
+              ? otherPatchFromMovie(details as Awaited<ReturnType<typeof enrichMovie>>)
+              : otherPatchFromTV(details as Awaited<ReturnType<typeof enrichTV>>),
+          )
           return
         }
 

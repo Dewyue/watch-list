@@ -1,5 +1,6 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
 import BottomNav from './components/BottomNav'
+import BatchEnrichRunner from './components/BatchEnrichRunner'
 import OthersPage from './pages/OthersPage'
 import SectionPage from './pages/SectionPage'
 import SettingsPage from './pages/SettingsPage'
@@ -20,6 +21,7 @@ export default function App() {
       </main>
 
       <BottomNav />
+      <BatchEnrichRunner />
     </div>
   )
 }

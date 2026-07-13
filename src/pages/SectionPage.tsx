@@ -7,7 +7,11 @@ import ItemActionSheet, { type ItemAction } from '../components/ItemActionSheet'
 import ProgressEditor from '../components/ProgressEditor'
 import SimpleTitleList, { type SimpleListItem } from '../components/SimpleTitleList'
 import SubTabBar from '../components/SubTabBar'
+import TmdbPickModal from '../components/TmdbPickModal'
 import { getSectionEntries, useWatchlist } from '../context/WatchlistContext'
+import { enrichItemFromTmdb } from '../lib/enrichItem'
+import { buildMovieDetails, buildTVDetails } from '../lib/itemDetails'
+import type { TmdbSearchHit } from '../lib/tmdb'
 import type { MediaKind } from '../store/watchlistStore'
 import type { Movie, SectionKey, TVGroupMode, TVShow } from '../types'
 import { getMovieGroups, getTVGroups, SECTIONS, SIMPLE_SECTIONS } from '../types'
@@ -23,31 +27,6 @@ type ActiveItem = {
   progress?: string
 }
 
-function movieDetails(movie: Movie) {
-  return [
-    { label: '简介', value: movie.synopsis ?? '' },
-    { label: '时长', value: movie.duration ?? '' },
-    { label: '主演', value: movie.actors?.join('、') ?? '' },
-    { label: '导演', value: movie.director ?? '' },
-  ]
-}
-
-function tvDetails(show: TVShow) {
-  const seasonEp =
-    show.seasons != null || show.episodes != null
-      ? `${show.seasons ?? '?'} 季 · ${show.episodes ?? '?'} 集`
-      : ''
-
-  return [
-    { label: '简介', value: show.synopsis ?? '' },
-    { label: '进度', value: show.progress ?? '' },
-    { label: '季数/集数', value: seasonEp },
-    { label: '国家', value: show.country ?? '' },
-    { label: '类别', value: show.genre ?? '' },
-    { label: '平台', value: show.platform ?? '' },
-  ]
-}
-
 export default function SectionPage({ sectionKey }: SectionPageProps) {
   const { data, setProgress, moveTo, remove, addMovie, addTV, patchMovieItem, patchTVItem } =
     useWatchlist()
@@ -59,6 +38,10 @@ export default function SectionPage({ sectionKey }: SectionPageProps) {
   const [sheetOpen, setSheetOpen] = useState(false)
   const [editorOpen, setEditorOpen] = useState(false)
   const [addOpen, setAddOpen] = useState(false)
+  const [enrichHits, setEnrichHits] = useState<TmdbSearchHit[]>([])
+  const [enrichPickOpen, setEnrichPickOpen] = useState(false)
+  const [enrichLoading, setEnrichLoading] = useState(false)
+  const [enrichError, setEnrichError] = useState('')
 
   const simpleItems: SimpleListItem[] = useMemo(
     () =>
@@ -67,6 +50,10 @@ export default function SectionPage({ sectionKey }: SectionPageProps) {
         kind: entry.kind,
         title: entry.title,
         progress: entry.progress,
+        details:
+          entry.kind === 'movie'
+            ? buildMovieDetails(entry.raw as Movie)
+            : buildTVDetails(entry.raw as TVShow),
       })),
     [data, sectionKey],
   )
@@ -80,6 +67,42 @@ export default function SectionPage({ sectionKey }: SectionPageProps) {
     [section.tvShows, tvGroupMode],
   )
 
+  const applyEnrich = (details: Record<string, unknown>, kind: MediaKind) => {
+    if (!activeItem) return
+    if (kind === 'movie') {
+      patchMovieItem(sectionKey, activeItem.id, details as Partial<Movie>)
+    } else {
+      patchTVItem(sectionKey, activeItem.id, details as Partial<TVShow>)
+    }
+    setEnrichPickOpen(false)
+    setEnrichHits([])
+    setEnrichError('')
+  }
+
+  const runEnrich = async (pickId?: number, pickKind?: MediaKind) => {
+    if (!activeItem) return
+
+    setEnrichLoading(true)
+    setEnrichError('')
+    setSheetOpen(false)
+
+    try {
+      const kind = pickKind ?? activeItem.kind
+      const result = await enrichItemFromTmdb(activeItem.title, kind, pickId)
+      if ('needPick' in result) {
+        setEnrichHits(result.hits)
+        setEnrichPickOpen(true)
+        return
+      }
+      applyEnrich(result.details as Record<string, unknown>, result.kind)
+    } catch (err) {
+      setEnrichError(err instanceof Error ? err.message : '补全失败')
+      alert(err instanceof Error ? err.message : '补全失败')
+    } finally {
+      setEnrichLoading(false)
+    }
+  }
+
   const openActions = (item: ActiveItem) => {
     setActiveItem(item)
     setSheetOpen(true)
@@ -90,17 +113,24 @@ export default function SectionPage({ sectionKey }: SectionPageProps) {
 
     switch (action) {
       case 'editProgress':
+        setSheetOpen(false)
         setEditorOpen(true)
         break
       case 'moveWatching':
         moveTo(sectionKey, 'watching', activeItem.id, activeItem.kind, activeItem.progress ?? 'S1E1')
+        setSheetOpen(false)
         break
       case 'moveUrgent':
         moveTo(sectionKey, 'urgent', activeItem.id, activeItem.kind)
+        setSheetOpen(false)
+        break
+      case 'enrichTmdb':
+        void runEnrich()
         break
       case 'delete':
         if (confirm(`确定删除「${activeItem.title}」？`)) {
           remove(sectionKey, activeItem.id, activeItem.kind)
+          setSheetOpen(false)
         }
         break
     }
@@ -122,7 +152,7 @@ export default function SectionPage({ sectionKey }: SectionPageProps) {
           <h1 className="text-xl font-bold">{label}</h1>
           <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
             {isSimple
-              ? `共 ${simpleItems.length} 项 · 点 ··· 管理`
+              ? `共 ${simpleItems.length} 项 · 点条目看详情 · ··· 管理`
               : `电影 ${section.movies.length} 部 · 电视剧 ${section.tvShows.length} 部 · 点 ··· 管理`}
           </p>
         </div>
@@ -143,6 +173,10 @@ export default function SectionPage({ sectionKey }: SectionPageProps) {
         </div>
       </header>
 
+      {enrichError && (
+        <p className="mb-3 text-sm text-amber-700 dark:text-amber-300">{enrichError}</p>
+      )}
+
       {isSimple ? (
         <SimpleTitleList
           items={simpleItems}
@@ -161,7 +195,7 @@ export default function SectionPage({ sectionKey }: SectionPageProps) {
           {subTab === 'movies' ? (
             <GroupedAccordion
               groups={movieGroups}
-              getDetails={movieDetails}
+              getDetails={buildMovieDetails}
               emptyText="暂无电影"
               defaultCollapsed
               getItemId={(item) => item.id ?? item.title}
@@ -172,7 +206,7 @@ export default function SectionPage({ sectionKey }: SectionPageProps) {
               <GroupToggle active={tvGroupMode} onChange={setTvGroupMode} />
               <GroupedAccordion
                 groups={tvGroups}
-                getDetails={tvDetails}
+                getDetails={buildTVDetails}
                 emptyText="暂无电视剧"
                 defaultCollapsed
                 getItemId={(item) => item.id ?? item.title}
@@ -189,6 +223,18 @@ export default function SectionPage({ sectionKey }: SectionPageProps) {
         section={sectionKey}
         onAction={handleAction}
         onClose={() => setSheetOpen(false)}
+      />
+
+      <TmdbPickModal
+        open={enrichPickOpen}
+        title={activeItem?.title ?? ''}
+        hits={enrichHits}
+        loading={enrichLoading}
+        onPick={(hit) => void runEnrich(hit.id, hit.kind)}
+        onClose={() => {
+          setEnrichPickOpen(false)
+          setEnrichHits([])
+        }}
       />
 
       <ProgressEditor

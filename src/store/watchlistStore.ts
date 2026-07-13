@@ -1,4 +1,5 @@
 import type { Movie, OtherItem, SectionKey, TVShow, WatchlistData } from '../types'
+import { migrateItemNotes } from '../lib/itemDetails'
 import seedData from '../../data/watchlist.json'
 
 const STORAGE_KEY = 'watch-list-data'
@@ -30,12 +31,12 @@ export function ensureIds(data: WatchlistData): WatchlistData {
 
   for (const key of Object.keys(next.sections) as SectionKey[]) {
     next.sections[key] = {
-      movies: withIds(next.sections[key].movies ?? []),
-      tvShows: withIds(next.sections[key].tvShows ?? []),
+      movies: withIds(next.sections[key].movies ?? []).map((item) => migrateItemNotes(item)),
+      tvShows: withIds(next.sections[key].tvShows ?? []).map((item) => migrateItemNotes(item)),
     }
   }
 
-  next.others = withIds(next.others ?? [])
+  next.others = withIds(next.others ?? []).map((item) => migrateItemNotes(item))
   return next
 }
 
@@ -161,6 +162,12 @@ export function addOtherItem(data: WatchlistData, item: OtherItem): WatchlistDat
   return next
 }
 
+export function deleteOtherItem(data: WatchlistData, id: string): WatchlistData {
+  const next = structuredClone(data)
+  next.others = next.others.filter((item) => item.id !== id)
+  return next
+}
+
 export function patchMovie(
   data: WatchlistData,
   section: SectionKey,
@@ -207,11 +214,11 @@ export function importWatchlist(json: string): WatchlistData {
   const parsed = JSON.parse(json) as WatchlistData
   const seeded = seedWatchlist()
   seeded.sections = parsed.sections
-  seeded.others = withIds(parsed.others ?? [])
+  seeded.others = withIds(parsed.others ?? []).map((item) => migrateItemNotes(item))
   for (const key of Object.keys(seeded.sections) as SectionKey[]) {
     seeded.sections[key] = {
-      movies: withIds(seeded.sections[key].movies ?? []),
-      tvShows: withIds(seeded.sections[key].tvShows ?? []),
+      movies: withIds(seeded.sections[key].movies ?? []).map((item) => migrateItemNotes(item)),
+      tvShows: withIds(seeded.sections[key].tvShows ?? []).map((item) => migrateItemNotes(item)),
     }
   }
   saveWatchlistToStorage(seeded)

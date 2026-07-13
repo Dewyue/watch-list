@@ -1,35 +1,51 @@
 import type { SectionKey } from '../types'
 
-export type ItemAction = 'editProgress' | 'moveWatching' | 'moveUrgent' | 'delete'
+export type ItemAction =
+  | 'editProgress'
+  | 'moveWatching'
+  | 'moveUrgent'
+  | 'enrichTmdb'
+  | 'delete'
 
 type ItemActionSheetProps = {
   open: boolean
   title: string
-  section: SectionKey
+  section: SectionKey | 'others'
   onAction: (action: ItemAction) => void
   onClose: () => void
 }
 
-function getActions(section: SectionKey): { action: ItemAction; label: string; tone?: 'danger' }[] {
+function getActions(section: SectionKey | 'others'): {
+  action: ItemAction
+  label: string
+  tone?: 'danger'
+}[] {
+  const enrich = { action: 'enrichTmdb' as const, label: '从 TMDB 补全详情' }
+
   switch (section) {
     case 'watching':
-      return [{ action: 'editProgress', label: '修改进度' }]
+      return [{ action: 'editProgress', label: '修改进度' }, enrich]
     case 'urgent':
       return [
         { action: 'moveWatching', label: '移到正在看' },
+        enrich,
         { action: 'delete', label: '删除', tone: 'danger' },
       ]
     case 'unfinished':
       return [
         { action: 'moveWatching', label: '移到正在看' },
+        enrich,
         { action: 'delete', label: '删除', tone: 'danger' },
       ]
     case 'todo':
       return [
         { action: 'moveWatching', label: '移到正在看' },
         { action: 'moveUrgent', label: '移到抓紧看' },
+        enrich,
         { action: 'delete', label: '删除', tone: 'danger' },
       ]
+    case 'others':
+      return [enrich, { action: 'delete', label: '删除', tone: 'danger' }]
     default:
       return []
   }
@@ -59,7 +75,7 @@ export default function ItemActionSheet({
             type="button"
             onClick={() => {
               onAction(item.action)
-              onClose()
+              if (item.action !== 'enrichTmdb') onClose()
             }}
             className={[
               'min-h-11 w-full rounded-xl px-3 text-left text-[15px]',

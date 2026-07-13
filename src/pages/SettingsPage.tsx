@@ -1,13 +1,21 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useWatchlist } from '../context/WatchlistContext'
+import {
+  enrichAllWatchlist,
+  resetAutoEnrichFlag,
+  type BatchEnrichProgress,
+} from '../lib/batchEnrich'
 import { getTmdbApiKey, setTmdbApiKey } from '../lib/tmdb'
 
 export default function SettingsPage() {
-  const { exportJson, importJson, reset } = useWatchlist()
+  const { data, exportJson, importJson, reset, patchMovieItem, patchTVItem, patchOther } =
+    useWatchlist()
   const [json, setJson] = useState('')
   const [message, setMessage] = useState('')
   const [apiKey, setApiKey] = useState(() => getTmdbApiKey())
+  const [batchProgress, setBatchProgress] = useState<BatchEnrichProgress | null>(null)
+  const batchRunning = useRef(false)
 
   const copyExport = async () => {
     const text = exportJson()
@@ -32,6 +40,39 @@ export default function SettingsPage() {
   const saveApiKey = () => {
     setTmdbApiKey(apiKey)
     setMessage('TMDB API Key 已保存')
+  }
+
+  const runBatchEnrich = async (force = false) => {
+    if (batchRunning.current) return
+    if (!getTmdbApiKey()) {
+      setMessage('请先保存 TMDB API Key')
+      return
+    }
+    if (force) resetAutoEnrichFlag()
+
+    batchRunning.current = true
+    setMessage('开始批量补全，请保持页面打开…')
+
+    try {
+      const result = await enrichAllWatchlist(
+        data,
+        {
+          patchMovie: patchMovieItem,
+          patchTV: patchTVItem,
+          patchOther: patchOther,
+        },
+        setBatchProgress,
+      )
+      setMessage(
+        result.failed.length
+          ? `补全完成：${result.done - result.failed.length} 成功，${result.failed.length} 未匹配`
+          : `全部 ${result.done} 条已补全`,
+      )
+    } catch (err) {
+      setMessage(err instanceof Error ? err.message : '批量补全失败')
+    } finally {
+      batchRunning.current = false
+    }
   }
 
   return (
@@ -79,6 +120,22 @@ export default function SettingsPage() {
         >
           保存 API Key
         </button>
+        <button
+          type="button"
+          onClick={() => void runBatchEnrich(true)}
+          className="mt-2 min-h-11 w-full rounded-xl border border-indigo-200 text-sm text-indigo-700 dark:border-indigo-900 dark:text-indigo-300"
+        >
+          一键补全全部条目
+        </button>
+        {batchProgress && (
+          <p className="mt-2 text-xs text-slate-500">
+            进度 {batchProgress.done}/{batchProgress.total}
+            {batchProgress.current ? ` · ${batchProgress.current}` : ''}
+          </p>
+        )}
+        <p className="mt-2 text-xs text-slate-400">
+          打开网站后会自动补全一次；你的备注（note）和观看进度不会被覆盖。
+        </p>
       </section>
 
       <div className="space-y-3">
@@ -103,7 +160,8 @@ export default function SettingsPage() {
           onClick={() => {
             if (confirm('确定恢复为网站默认清单？本地修改将丢失。')) {
               reset()
-              setMessage('已恢复默认清单')
+              resetAutoEnrichFlag()
+              setMessage('已恢复默认清单，将自动重新补全')
             }
           }}
           className="min-h-11 w-full rounded-xl border border-red-200 text-sm text-red-600 dark:border-red-900 dark:text-red-400"

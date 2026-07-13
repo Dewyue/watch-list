@@ -11,6 +11,7 @@ export interface Movie {
   title: string
   genre: string
   synopsis?: string
+  note?: string
   duration?: string
   actors?: string[]
   director?: string
@@ -23,7 +24,9 @@ export interface TVShow {
   genre?: string
   platform?: string
   synopsis?: string
+  note?: string
   progress?: string
+  actors?: string[]
   seasons?: number
   episodes?: number
 }
@@ -39,7 +42,16 @@ export interface OtherItem {
   type: OtherType
   actor?: string
   synopsis?: string
+  note?: string
   progress?: string
+  duration?: string
+  actors?: string[]
+  director?: string
+  country?: string
+  genre?: string
+  platform?: string
+  seasons?: number
+  episodes?: number
 }
 
 export interface WatchlistData {
