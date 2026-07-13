@@ -1,0 +1,166 @@
+{
+  "version": 1,
+  "sections": {
+    "watching": {
+      "movies": [
+        {
+          "title": "沙丘2",
+          "genre": "科幻",
+          "synopsis": "保罗与弗雷曼人联手，在厄拉科斯星球上继续对抗哈克南家族与皇帝势力。",
+          "duration": "166分钟",
+          "actors": ["提莫西·查拉梅", "赞达亚", "丽贝卡·弗格森"],
+          "director": "丹尼斯·维伦纽瓦"
+        }
+      ],
+      "tvShows": [
+        {
+          "title": "三体",
+          "country": "中国",
+          "genre": "科幻",
+          "platform": "腾讯视频",
+          "synopsis": "根据刘慈欣同名小说改编，讲述地球文明与三体文明的首次接触。",
+          "seasons": 1,
+          "episodes": 30
+        },
+        {
+          "title": "黑暗荣耀",
+          "country": "韩国",
+          "genre": "悬疑",
+          "platform": "Netflix",
+          "synopsis": "曾在学生时代遭受霸凌的女人，在多年后对加害者们展开精密复仇。",
+          "seasons": 2,
+          "episodes": 16
+        }
+      ]
+    },
+    "urgent": {
+      "movies": [
+        {
+          "title": "奥本海默",
+          "genre": "传记",
+          "synopsis": "讲述「原子弹之父」罗伯特·奥本海默在曼哈顿计划中的经历与内心挣扎。",
+          "duration": "180分钟",
+          "actors": ["基里安·墨菲", "艾米莉·布朗特", "马特·达蒙"],
+          "director": "克里斯托弗·诺兰"
+        },
+        {
+          "title": "花月杀手",
+          "genre": "犯罪",
+          "synopsis": "20 世纪 20 年代俄克拉荷马州奥塞奇族连环谋杀案的真实故事。",
+          "duration": "206分钟",
+          "actors": ["莱昂纳多·迪卡普里奥", "罗伯特·德尼罗", "莉莉·格莱斯顿"],
+          "director": "马丁·斯科塞斯"
+        }
+      ],
+      "tvShows": [
+        {
+          "title": "真探 第四季",
+          "country": "美国",
+          "genre": "悬疑",
+          "platform": "HBO",
+          "synopsis": "阿拉斯加小镇离奇失踪案，两名女警在极夜中追查真相。",
+          "seasons": 1,
+          "episodes": 6
+        }
+      ]
+    },
+    "unfinished": {
+      "movies": [
+        {
+          "title": "坠落的审判",
+          "genre": "剧情",
+          "synopsis": "丈夫坠楼身亡后，妻子成为首要嫌疑人，庭审逐渐揭开婚姻真相。",
+          "duration": "151分钟",
+          "actors": ["桑德拉·惠勒", "斯万·阿劳德"],
+          "director": "茹斯汀·特里耶"
+        }
+      ],
+      "tvShows": [
+        {
+          "title": "漫长的季节",
+          "country": "中国",
+          "genre": "悬疑",
+          "platform": "腾讯视频",
+          "synopsis": "一桩碎尸案串联起桦林小城三个时代里一群普通人的命运。",
+          "seasons": 1,
+          "episodes": 12
+        },
+        {
+          "title": "怒呛人生",
+          "country": "美国",
+          "genre": "喜剧",
+          "platform": "Netflix",
+          "synopsis": "一次路怒事件让两个陌生人的生活彻底纠缠在一起。",
+          "seasons": 1,
+          "episodes": 10
+        }
+      ]
+    },
+    "todo": {
+      "movies": [
+        {
+          "title": "可怜的东西",
+          "genre": "奇幻",
+          "synopsis": "年轻女子在科学怪人的实验中重获新生，踏上探索自由与欲望的旅程。",
+          "duration": "141分钟",
+          "actors": ["艾玛·斯通", "马克·鲁法洛", "威廉·达福"],
+          "director": "欧格斯·兰斯莫斯"
+        },
+        {
+          "title": "利益区域",
+          "genre": "历史",
+          "synopsis": "以奥斯维辛集中营指挥官一家在围墙另一侧的日常生活为视角。",
+          "duration": "105分钟",
+          "actors": ["克里斯蒂安·弗里德尔", "桑德拉·惠勒"],
+          "director": "乔纳森·格雷泽"
+        }
+      ],
+      "tvShows": [
+        {
+          "title": "繁花",
+          "country": "中国",
+          "genre": "剧情",
+          "platform": "腾讯视频",
+          "synopsis": "90 年代上海黄河路，小人物阿宝在时代浪潮中打拼成宝总。",
+          "seasons": 1,
+          "episodes": 30
+        },
+        {
+          "title": "熊家餐馆 第三季",
+          "country": "美国",
+          "genre": "剧情",
+          "platform": "Hulu",
+          "synopsis": "Carmy 与团队继续经营三明治店，追求米其林星级的同时面对内心创伤。",
+          "seasons": 1,
+          "episodes": 10
+        }
+      ]
+    }
+  },
+  "others": [
+    {
+      "title": "葬送的芙莉莲",
+      "type": "anime",
+      "synopsis": "精灵魔法使芙莉莲在勇者逝世后踏上了解人类与自身情感的旅程。",
+      "progress": "第 28 集"
+    },
+    {
+      "title": "迷宫饭",
+      "type": "anime",
+      "synopsis": "冒险者在地下迷宫中烹饪魔物料理，展开奇幻美食之旅。",
+      "progress": "第 24 集"
+    },
+    {
+      "title": "再见绘梨",
+      "type": "manga",
+      "synopsis": "少年用摄像机记录与绝症少女绘梨的相遇，在影像中拼凑记忆与告别。",
+      "progress": "已完结，1 卷"
+    },
+    {
+      "title": "地球脉动 第三季",
+      "type": "documentary",
+      "synopsis": "BBC 自然纪录片，展现地球上最壮丽的野生动物与栖息地。",
+      "progress": "8 集"
+    }
+  ]
+}
