@@ -12,6 +12,7 @@ export type SimpleListItem = {
 type SimpleTitleListProps = {
   items: SimpleListItem[]
   emptyText: string
+  actionLabel?: string
   onItemAction?: (item: SimpleListItem) => void
 }
 
@@ -24,7 +25,12 @@ function formatProgress(progress?: string) {
   return progress
 }
 
-export default function SimpleTitleList({ items, emptyText, onItemAction }: SimpleTitleListProps) {
+export default function SimpleTitleList({
+  items,
+  emptyText,
+  actionLabel = '···',
+  onItemAction,
+}: SimpleTitleListProps) {
   const [openItems, setOpenItems] = useState<Set<string>>(new Set())
 
   if (items.length === 0) {
@@ -73,10 +79,15 @@ export default function SimpleTitleList({ items, emptyText, onItemAction }: Simp
                 <button
                   type="button"
                   onClick={() => onItemAction(item)}
-                  className="min-h-11 min-w-11 shrink-0 text-lg text-slate-400"
-                  aria-label={`操作 ${item.title}`}
+                  className={[
+                    'shrink-0 text-slate-500 dark:text-slate-400',
+                    actionLabel === '···'
+                      ? 'min-h-11 min-w-11 text-lg'
+                      : 'mr-3 mt-2 inline-flex min-h-9 items-center rounded-xl bg-slate-100 px-2.5 text-xs font-medium dark:bg-slate-800',
+                  ].join(' ')}
+                  aria-label={actionLabel === '···' ? `操作 ${item.title}` : actionLabel}
                 >
-                  ···
+                  {actionLabel}
                 </button>
               )}
             </div>

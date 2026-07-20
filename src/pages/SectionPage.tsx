@@ -174,7 +174,15 @@ export default function SectionPage({ sectionKey }: SectionPageProps) {
         <SimpleTitleList
           items={simpleItems}
           emptyText="暂无内容"
-          onItemAction={(item) => openActions(item)}
+          actionLabel={sectionKey === 'watching' ? '修改进度' : '···'}
+          onItemAction={(item) => {
+            if (sectionKey === 'watching') {
+              setActiveItem(item)
+              setEditorOpen(true)
+              return
+            }
+            openActions(item)
+          }}
         />
       ) : (
         <>

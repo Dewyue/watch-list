@@ -24,7 +24,7 @@ function getActions(section: SectionKey | 'others'): {
 
   switch (section) {
     case 'watching':
-      return [{ action: 'editProgress', label: '修改进度' }, enrich]
+      return [{ action: 'editProgress', label: '修改进度' }]
     case 'urgent':
       return [
         { action: 'moveWatching', label: '移到正在看' },
