@@ -99,24 +99,19 @@ export default function OthersPage() {
 
   return (
     <div>
-      <header className="mb-4 flex items-start justify-between gap-3">
-        <div>
-          <h1 className="text-xl font-bold">其他</h1>
-          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-            动漫、漫画、纪录片、演员作品等 · 共 {items.length} 项
-          </p>
-        </div>
-        <div className="flex shrink-0 gap-1">
+      <header className="mb-4 flex items-center justify-between gap-3">
+        <h1 className="text-xl font-bold">其他</h1>
+        <div className="flex shrink-0 items-center gap-2">
           <button
             type="button"
             onClick={() => setAddOpen(true)}
-            className="min-h-11 rounded-xl bg-indigo-600 px-3 text-sm font-medium text-white"
+            className="inline-flex min-h-11 items-center rounded-xl bg-indigo-600 px-3 text-sm font-medium text-white"
           >
             添加
           </button>
           <Link
             to="/settings"
-            className="min-h-11 rounded-xl px-3 text-sm text-slate-500 dark:text-slate-400"
+            className="inline-flex min-h-11 items-center rounded-xl bg-white px-3 text-sm font-medium text-slate-600 dark:bg-slate-900 dark:text-slate-300"
           >
             数据
           </Link>
