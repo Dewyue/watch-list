@@ -25,10 +25,28 @@ export default function ProgressEditor({ open, title, progress, onSave, onClose 
   if (!open) return null
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 p-4">
-      <div className="w-full max-w-[430px] rounded-2xl bg-white p-4 dark:bg-slate-900">
-        <h2 className="text-lg font-semibold">修改进度</h2>
-        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">{title}</p>
+    <div
+      className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 p-4"
+      onClick={onClose}
+    >
+      <div
+        className="w-full max-w-[430px] rounded-2xl bg-white p-4 dark:bg-slate-900"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <h2 className="text-lg font-semibold">修改进度</h2>
+            <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">{title}</p>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className="inline-flex min-h-11 min-w-11 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-lg text-slate-500 dark:bg-slate-800"
+            aria-label="关闭"
+          >
+            ×
+          </button>
+        </div>
 
         <div className="mt-4 grid grid-cols-2 gap-3">
           <label className="block">
@@ -57,7 +75,7 @@ export default function ProgressEditor({ open, title, progress, onSave, onClose 
           <button
             type="button"
             onClick={onClose}
-            className="min-h-11 flex-1 rounded-xl border border-slate-200 text-sm dark:border-slate-700"
+            className="min-h-11 flex-1 rounded-xl bg-slate-100 text-sm font-medium text-slate-700 dark:bg-slate-800 dark:text-slate-200"
           >
             取消
           </button>
