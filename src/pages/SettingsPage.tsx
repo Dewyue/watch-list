@@ -84,7 +84,7 @@ export default function SettingsPage() {
         </p>
       )}
 
-      <section className="mb-6 rounded-2xl border border-slate-200 p-4 dark:border-slate-700">
+      <section className="mb-6 rounded-2xl bg-white p-4 dark:bg-slate-900">
         <h2 className="font-semibold">自动补全（TMDB）</h2>
         <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
           添加条目时联网获取简介、演员、分类等。免费注册：

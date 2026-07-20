@@ -10,14 +10,14 @@ export default function MediaCard({ title, details, isOpen, onToggle, onAction }
   const visibleDetails = details.filter((d) => d.value.trim())
 
   return (
-    <div className="border-b border-slate-100 last:border-b-0 dark:border-slate-800">
+    <div className="overflow-hidden rounded-2xl bg-white dark:bg-slate-900">
       <div className="flex items-center">
         <button
           type="button"
           onClick={onToggle}
           className="flex min-h-11 min-w-0 flex-1 items-center justify-between px-4 py-3 text-left"
         >
-          <span className="text-[15px] font-medium">{title}</span>
+          <span className="font-medium">{title}</span>
           {visibleDetails.length > 0 && (
             <span className="ml-2 shrink-0 text-xs text-slate-400">{isOpen ? '收起' : '详情'}</span>
           )}

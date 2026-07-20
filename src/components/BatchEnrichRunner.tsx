@@ -39,7 +39,7 @@ export default function BatchEnrichRunner() {
 
   return (
     <div className="fixed inset-x-0 bottom-20 z-40 mx-auto max-w-[430px] px-4">
-      <div className="rounded-2xl border border-indigo-200 bg-white/95 p-3 shadow-lg backdrop-blur dark:border-indigo-900 dark:bg-slate-900/95">
+      <div className="rounded-2xl bg-white/95 p-3 shadow-sm backdrop-blur dark:bg-slate-900/95">
         <div className="flex items-center justify-between gap-2 text-sm">
           <span className="font-medium text-indigo-700 dark:text-indigo-300">
             {progress.running ? 'TMDB 批量补全中…' : 'TMDB 批量补全完成'}

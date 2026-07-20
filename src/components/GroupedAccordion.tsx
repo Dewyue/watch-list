@@ -30,7 +30,7 @@ export default function GroupedAccordion<T extends { title: string; id?: string 
 
   if (groups.size === 0) {
     return (
-      <p className="rounded-2xl bg-slate-100 px-4 py-8 text-center text-sm text-slate-500 dark:bg-slate-800 dark:text-slate-400">
+      <p className="rounded-2xl bg-white px-4 py-8 text-center text-sm text-slate-500 dark:bg-slate-900 dark:text-slate-400">
         {emptyText}
       </p>
     )
@@ -59,14 +59,11 @@ export default function GroupedAccordion<T extends { title: string; id?: string 
       {[...groups.entries()].map(([groupName, items]) => {
         const isOpen = openGroups.has(groupName)
         return (
-          <section
-            key={groupName}
-            className="overflow-hidden rounded-2xl border border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900"
-          >
+          <section key={groupName} className="space-y-3">
             <button
               type="button"
               onClick={() => toggleGroup(groupName)}
-              className="flex min-h-11 w-full items-center justify-between px-4 py-3 text-left"
+              className="flex min-h-11 w-full items-center justify-between rounded-2xl bg-white px-4 py-3 text-left dark:bg-slate-900"
             >
               <span className="font-medium">{groupName}</span>
               <span className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
@@ -78,7 +75,7 @@ export default function GroupedAccordion<T extends { title: string; id?: string 
             </button>
 
             {isOpen && (
-              <div className="border-t border-slate-100 dark:border-slate-800">
+              <div className="space-y-3">
                 {items.map((item, index) => {
                   const itemId = getItemId?.(item, groupName, index) ?? `${groupName}-${item.title}-${index}`
                   return (

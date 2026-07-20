@@ -29,7 +29,7 @@ export default function SimpleTitleList({ items, emptyText, onItemAction }: Simp
 
   if (items.length === 0) {
     return (
-      <p className="rounded-2xl bg-slate-100 px-4 py-8 text-center text-sm text-slate-500 dark:bg-slate-800 dark:text-slate-400">
+      <p className="rounded-2xl bg-white px-4 py-8 text-center text-sm text-slate-500 dark:bg-slate-900 dark:text-slate-400">
         {emptyText}
       </p>
     )
@@ -45,21 +45,21 @@ export default function SimpleTitleList({ items, emptyText, onItemAction }: Simp
   }
 
   return (
-    <ul className="overflow-hidden rounded-2xl border border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900">
+    <ul className="space-y-3">
       {items.map((item) => {
         const progressLabel = formatProgress(item.progress)
         const visibleDetails = item.details.filter((d) => d.value.trim())
         const hasDetails = visibleDetails.length > 0
 
         return (
-          <li key={item.id} className="border-b border-slate-100 last:border-b-0 dark:border-slate-800">
+          <li key={item.id} className="overflow-hidden rounded-2xl bg-white dark:bg-slate-900">
             <div className="flex items-start">
               <button
                 type="button"
                 onClick={() => hasDetails && toggleItem(item.id)}
                 className="min-w-0 flex-1 px-4 py-3 text-left"
               >
-                <div className="text-[15px] font-medium">{item.title}</div>
+                <div className="font-medium">{item.title}</div>
                 {progressLabel && (
                   <div className="mt-0.5 text-sm text-indigo-600 dark:text-indigo-400">{progressLabel}</div>
                 )}
@@ -81,7 +81,7 @@ export default function SimpleTitleList({ items, emptyText, onItemAction }: Simp
               )}
             </div>
             {hasDetails && openItems.has(item.id) && (
-              <div className="border-t border-slate-100 px-4 pb-4 pt-2 dark:border-slate-800">
+              <div className="px-4 pb-4 pt-1">
                 {visibleDetails.map((detail) => (
                   <div key={detail.label} className="mt-2 text-sm text-slate-600 dark:text-slate-300">
                     <span className="text-xs font-medium text-slate-400 dark:text-slate-500">
