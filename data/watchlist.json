@@ -3,20 +3,54 @@
   "sections": {
     "watching": {
       "movies": [],
-      "tvShows": []
+      "tvShows": [
+        {
+          "title": "瑞克和莫蒂",
+          "country": "美国",
+          "genre": "科幻",
+          "platform": "Adult Swim",
+          "progress": "S8E2"
+        }
+      ]
     },
     "urgent": {
       "movies": [],
-      "tvShows": []
+      "tvShows": [
+        {
+          "title": "地球脉动",
+          "country": "英国",
+          "genre": "纪录片",
+          "platform": "BBC",
+          "progress": "第2季"
+        }
+      ]
     },
     "unfinished": {
       "movies": [],
-      "tvShows": []
+      "tvShows": [
+        {
+          "title": "毛骗",
+          "country": "中国",
+          "genre": "悬疑",
+          "progress": "S1E3"
+        }
+      ]
     },
     "todo": {
-      "movies": [],
+      "movies": [
+        {
+          "title": "信条",
+          "genre": "科幻"
+        }
+      ],
       "tvShows": []
     }
   },
-  "others": []
+  "others": [
+    {
+      "title": "雷霆战警",
+      "type": "star",
+      "actor": "王力宏"
+    }
+  ]
 }
