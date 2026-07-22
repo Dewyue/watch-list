@@ -17,7 +17,7 @@ export default defineConfig({
       manifest: {
         name: '剧集清单',
         short_name: '剧集清单',
-        description: '个人观影清单',
+        description: '手机端个人观影清单，支持进度记录与 TMDB 自动补全',
         theme_color: '#6366f1',
         background_color: '#f8fafc',
         display: 'standalone',
