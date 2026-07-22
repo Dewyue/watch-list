@@ -102,7 +102,7 @@ export default function SettingsPage() {
           value={apiKey}
           onChange={(e) => setApiKey(e.target.value)}
           placeholder="TMDB API Key"
-          className="mt-3 min-h-11 w-full rounded-xl bg-slate-100 px-3 text-sm dark:bg-slate-800"
+          className="mt-3 min-h-11 w-full rounded-xl bg-slate-50 px-3 text-sm outline-none dark:bg-slate-800"
         />
         <button
           type="button"
@@ -133,7 +133,7 @@ export default function SettingsPage() {
         <button
           type="button"
           onClick={copyExport}
-          className="min-h-11 w-full rounded-xl bg-white text-sm dark:bg-slate-900"
+          className="min-h-11 w-full rounded-xl bg-white text-sm outline-none dark:bg-slate-900"
         >
           导出 JSON
         </button>
@@ -141,7 +141,7 @@ export default function SettingsPage() {
         <button
           type="button"
           onClick={handleImport}
-          className="min-h-11 w-full rounded-xl bg-white text-sm dark:bg-slate-900"
+          className="min-h-11 w-full rounded-xl bg-white text-sm outline-none dark:bg-slate-900"
         >
           导入 JSON
         </button>
@@ -155,7 +155,7 @@ export default function SettingsPage() {
               setMessage('已恢复默认清单，将自动重新补全')
             }
           }}
-          className="min-h-11 w-full rounded-xl bg-white text-sm text-red-600 dark:bg-slate-900 dark:text-red-400"
+          className="min-h-11 w-full rounded-xl bg-white text-sm text-red-600 outline-none dark:bg-slate-900 dark:text-red-400"
         >
           恢复默认清单
         </button>
@@ -165,7 +165,7 @@ export default function SettingsPage() {
         value={json}
         onChange={(e) => setJson(e.target.value)}
         placeholder="在此粘贴 JSON 后点「导入 JSON」"
-        className="mt-4 min-h-48 w-full rounded-2xl bg-white p-3 text-xs dark:bg-slate-900"
+        className="mt-4 min-h-48 w-full rounded-2xl bg-white p-3 text-xs outline-none dark:bg-slate-900"
       />
     </div>
   )
