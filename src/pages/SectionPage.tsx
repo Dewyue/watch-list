@@ -183,6 +183,15 @@ export default function SectionPage({ sectionKey }: SectionPageProps) {
             }
             openActions(item)
           }}
+          onDelete={
+            sectionKey === 'watching'
+              ? (item) => {
+                  if (confirm(`确定删除「${item.title}」？`)) {
+                    remove(sectionKey, item.id, item.kind)
+                  }
+                }
+              : undefined
+          }
         />
       ) : (
         <>

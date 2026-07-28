@@ -14,6 +14,7 @@ type SimpleTitleListProps = {
   emptyText: string
   actionLabel?: string
   onItemAction?: (item: SimpleListItem) => void
+  onDelete?: (item: SimpleListItem) => void
 }
 
 function formatProgress(progress?: string) {
@@ -30,6 +31,7 @@ export default function SimpleTitleList({
   emptyText,
   actionLabel = '···',
   onItemAction,
+  onDelete,
 }: SimpleTitleListProps) {
   const [openItems, setOpenItems] = useState<Set<string>>(new Set())
 
@@ -56,6 +58,7 @@ export default function SimpleTitleList({
         const progressLabel = formatProgress(item.progress)
         const visibleDetails = item.details.filter((d) => d.value.trim())
         const hasDetails = visibleDetails.length > 0
+        const pillAction = actionLabel !== '···'
 
         return (
           <li key={item.id} className="overflow-hidden rounded-2xl bg-white dark:bg-slate-900">
@@ -75,20 +78,34 @@ export default function SimpleTitleList({
                   </div>
                 )}
               </button>
-              {onItemAction && (
-                <button
-                  type="button"
-                  onClick={() => onItemAction(item)}
-                  className={[
-                    'shrink-0 text-slate-500 dark:text-slate-400',
-                    actionLabel === '···'
-                      ? 'min-h-11 min-w-11 text-lg'
-                      : 'mr-3 mt-2 inline-flex min-h-9 items-center rounded-xl bg-slate-100 px-2.5 text-xs font-medium dark:bg-slate-800',
-                  ].join(' ')}
-                  aria-label={actionLabel === '···' ? `操作 ${item.title}` : actionLabel}
-                >
-                  {actionLabel}
-                </button>
+              {(onItemAction || onDelete) && (
+                <div className={['flex shrink-0 items-start gap-1.5', pillAction ? 'mr-3 mt-2' : ''].join(' ')}>
+                  {onItemAction && (
+                    <button
+                      type="button"
+                      onClick={() => onItemAction(item)}
+                      className={[
+                        'text-slate-500 dark:text-slate-400',
+                        pillAction
+                          ? 'inline-flex min-h-9 items-center rounded-xl bg-slate-100 px-2.5 text-xs font-medium dark:bg-slate-800'
+                          : 'min-h-11 min-w-11 text-lg',
+                      ].join(' ')}
+                      aria-label={pillAction ? actionLabel : `操作 ${item.title}`}
+                    >
+                      {actionLabel}
+                    </button>
+                  )}
+                  {onDelete && (
+                    <button
+                      type="button"
+                      onClick={() => onDelete(item)}
+                      className="inline-flex min-h-9 items-center rounded-xl bg-red-50 px-2.5 text-xs font-medium text-red-600 dark:bg-red-950 dark:text-red-400"
+                      aria-label={`删除 ${item.title}`}
+                    >
+                      删除
+                    </button>
+                  )}
+                </div>
               )}
             </div>
             {hasDetails && openItems.has(item.id) && (
